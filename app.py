@@ -66,6 +66,31 @@ def create_fundraiser():
 
     return render_template('create_fundraiser.html')
 
+@app.route('/my_fundraisers')
+@login_required
+def my_fundraisers():
+    fundraisers = Fundraiser.query.filter_by(user_id=current_user.id).all()
+    return render_template('my_fundraisers.html', fundraisers=fundraisers)
+
+@app.route('/fundraiser/<int:id>')
+@login_required
+def fundraiser(id):
+    fundraiser = Fundraiser.query.get_or_404(id)
+    if fundraiser.user_id != current_user.id:
+        flash('Not authorized')
+        return redirect('/dashboard')
+    return render_template('fundraiser.html', fundraiser=fundraiser)
+
+
+@app.route('/fundraiser/<int:id>/edit', methods=['GET', 'POST'])
+@login_required
+def edit_fundraiser(id):
+    fundraiser = Fundraiser.query.get(id)
+    if fundraiser.user_id != current_user.id:
+        flash('Not authorized')
+        return redirect(url_for('dashboard'))
+
+    # Allow edit
 
 @app.route('/contribute', methods=['GET', 'POST'])
 @login_required
