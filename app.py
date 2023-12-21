@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, request
+from flask import Flask, render_template, redirect, url_for, request, flash
 from flask_login import LoginManager, current_user, login_user, logout_user, login_required
 from flask_sqlalchemy import SQLAlchemy
 from models import User, Fundraiser, Contribution  # import db models
@@ -49,13 +49,58 @@ def dashboard():
         return redirect(url_for('login'))
 
 
-@app.route('/fundraiser/<int:id>')
+@app.route('/fundraisers/new', methods=['GET', 'POST'])
 @login_required
-def get_fundraiser(id):
-    fundraiser = Fundraiser.query.get_or_404(id)
-    if fundraiser.user_id != current_user.id:
-        return "Not authorized"
-    return render_template('fundraiser.html', fundraiser=fundraiser)
+def create_fundraiser():
+    if request.method == 'POST':
+        name = request.form['name']
+        description = request.form['description']
+        goal = request.form['goal']
+
+        fundraiser = Fundraiser(name=name, description=description, goal=goal, user=current_user)
+
+        db.session.add(fundraiser)
+        db.session.commit()
+
+        return redirect('/dashboard')
+
+    return render_template('create_fundraiser.html')
+
+
+@app.route('/contribute', methods=['GET', 'POST'])
+@login_required
+def contribute():
+    # Check if user already has active fundraiser
+    current_fundraiser = Fundraiser.query.filter_by(user_id=current_user.id, end_date=None).first()
+    if current_fundraiser:
+        flash('You already have an active fundraiser')
+        return redirect(url_for('dashboard'))
+
+    # Get fundraiser to contribute to
+    fundraiser_id = request.form.get('fundraiser_id')
+    fundraiser = Fundraiser.query.get(fundraiser_id)
+    if not fundraiser:
+        flash('Invalid fundraiser')
+        return redirect(url_for('dashboard'))
+
+    # Create new contribution
+    if request.method == 'POST':
+        amount = request.form['amount']
+        date = request.form['date']
+
+        contribution = Contribution(
+            amount=amount,
+            date=date,
+            fundraiser=fundraiser,
+            user=current_user
+        )
+
+        db.session.add(contribution)
+        db.session.commit()
+
+        flash('Contribution added!')
+
+    return render_template('contribute.html', fundraiser=fundraiser)
 
 
 # Other routes and views
