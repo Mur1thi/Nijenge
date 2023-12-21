@@ -1,11 +1,17 @@
+from flask_bootstrap import Bootstrap
 from flask import Flask, render_template, redirect, url_for, request, flash
 from flask_login import LoginManager, current_user, login_user, logout_user, login_required
 from flask_sqlalchemy import SQLAlchemy
-from models import User, Fundraiser, Contribution  # import db models
+from werkzeug.security import generate_password_hash, check_password_hash
+
+from models import User, Fundraiser, Contribution
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yoursecretkey'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///Toa.db'
+app.config['TEMPLATES_AUTO_RELOAD'] = True
+app.config['BOOTSTRAP_SERVE_LOCAL'] = True
+Bootstrap(app)
 
 db = SQLAlchemy(app)
 login_manager = LoginManager(app)
