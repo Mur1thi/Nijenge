@@ -1,17 +1,28 @@
 {% extends "base.html" %}
 
-{% block content %}
+{% block title %}Home{% endblock %}
 
-<div class="jumbotron">
-  <h1>Introducing Toa!</h1>
-  <p class="lead">The all-in-one platform that makes community fundraising a breeze</p>
-  <a class="btn btn-lg btn-primary" href="#" role="button">Start Fundraising</a>
+{% block main %}
+
+<div class="px-4 py-5 my-5 text-center">
+    <img class="d-block mx-auto mb-4" src="/static/logo.png" alt="" width="72">
+    <h1 class="display-5 fw-bold">Toa</h1>
+    <div class="col-lg-6 mx-auto">
+      <p class="lead mb-4">The easiest way to organize group donations and fundraisers</p>
+      <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+        <button type="button" class="btn btn-primary btn-lg px-4 gap-3">Start a Fundraiser</button>
+        <button type="button" class="btn btn-outline-secondary btn-lg px-4">Learn More</button>
+      </div>
+    </div>
 </div>
 
-<div class="row">
-  <div class="col-md-6">
-    <h2>Struggling to keep track of donations?</h2>
-    <p>Drowning in receipts for your community bake sale? We get it. Toa simplifies community fundraising, bringing transparency and ease to every campaign.</p>
+<div class="row flex-lg-row-reverse align-items-center g-5 py-5">
+  <div class="col-10 col-sm-8 col-lg-6">
+    <img src="https://user-images.githubusercontent.com/45781770/213941365-ec751bac-07d0-405a-868a-d00b0b6af0ab.png" class="d-block mx-lg-auto img-fluid" alt="Fundraising illustration" width="700" height="500" loading="lazy">
+  </div>
+  <div class="col-lg-6">
+    <h2 class="display-5 fw-bold lh-1 mb-3">Transparent and Effective Fundraising</h2>
+    <p class="lead">Quickly build an online fundraiser, easily track donations, and rally your community using Toa's user friendly platform.</p>
   </div>
 </div>
 

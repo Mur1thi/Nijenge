@@ -3,9 +3,6 @@ from flask import Flask, render_template, redirect, url_for, request, flash
 from flask_login import LoginManager, current_user, login_user, logout_user, login_required
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
-
-from models import User, Fundraiser, Contribution
-
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yoursecretkey'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///Toa.db'
@@ -22,6 +19,13 @@ login_manager.login_view = 'login'
 def load_user(user_id):
     return User.query.get(int(user_id))
 
+# Import models
+from models import User, Fundraiser, Contribution
+
+# index route
+@app.route('/')
+def index():
+    return render_template('landing.html')
 
 # Login route
 @app.route('/login', methods=['GET', 'POST'])
