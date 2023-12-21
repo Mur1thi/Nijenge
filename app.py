@@ -34,6 +34,11 @@ def login():
 
     return render_template('login.html')
 
+@app.route('/profile')
+@login_required
+def profile():
+    return render_template('profile.html', user=current_user)
+
 @app.route('/logout')
 @login_required
 def logout():
