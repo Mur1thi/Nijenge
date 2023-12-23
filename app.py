@@ -25,7 +25,7 @@ from models import User, Fundraiser, Contribution
 # index route
 @app.route('/')
 def index():
-    return render_template('landing.html')
+    return render_template('base.html')
 
 # Login route
 @app.route('/login', methods=['GET', 'POST'])
