@@ -4,18 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bd2eadde-a61c-4464-8825-01a94251749e" name="Changes" comment="New HTML, CSS, JavaScript, new landing page">
-      <change afterPath="$PROJECT_DIR$/templates/error.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/index.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/layout.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/login.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/register.html" afterDir="false" />
+    <list default="true" id="bd2eadde-a61c-4464-8825-01a94251749e" name="Changes" comment="Sun 24th Dec 2023">
+      <change afterPath="$PROJECT_DIR$/instance/toa.db" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Toa" beforeDir="false" afterPath="$PROJECT_DIR$/Toa" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/css/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/static/css/styles.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/base.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/error.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/error.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/login.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -133,7 +128,9 @@
       <workItem from="1703310957692" duration="375000" />
       <workItem from="1703311360104" duration="7738000" />
       <workItem from="1703351415954" duration="11918000" />
-      <workItem from="1703398956511" duration="2197000" />
+      <workItem from="1703398956511" duration="4498000" />
+      <workItem from="1703409478123" duration="232000" />
+      <workItem from="1703416467122" duration="656000" />
     </task>
     <task id="LOCAL-00001" summary="Database, routes and login logic complete">
       <option name="closed" value="true" />
@@ -199,7 +196,15 @@
       <option name="project" value="LOCAL" />
       <updated>1703313384106</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="Sun 24th Dec 2023">
+      <option name="closed" value="true" />
+      <created>1703407114940</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1703407114940</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -214,6 +219,7 @@
     <MESSAGE value="html css bootstrap" />
     <MESSAGE value="landing and base html updates" />
     <MESSAGE value="New HTML, CSS, JavaScript, new landing page" />
-    <option name="LAST_COMMIT_MESSAGE" value="New HTML, CSS, JavaScript, new landing page" />
+    <MESSAGE value="Sun 24th Dec 2023" />
+    <option name="LAST_COMMIT_MESSAGE" value="Sun 24th Dec 2023" />
   </component>
 </project>
