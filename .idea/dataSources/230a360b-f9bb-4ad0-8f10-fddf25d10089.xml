@@ -446,7 +446,7 @@
     <routine id="176" parent="1" name="fts3_tokenizer"/>
     <schema id="177" parent="1" name="main">
       <Current>1</Current>
-      <LastIntrospectionLocalTimestamp>2023-12-24.09:18:59</LastIntrospectionLocalTimestamp>
+      <LastIntrospectionLocalTimestamp>2023-12-24.19:09:51</LastIntrospectionLocalTimestamp>
     </schema>
     <argument id="178" parent="16">
       <ArgumentDirection>R</ArgumentDirection>
@@ -1546,7 +1546,7 @@
       <NotNull>1</NotNull>
       <Position>5</Position>
     </column>
-    <column id="538" parent="519" name="fundraiser_end_date">
+    <column id="538" parent="519" name="end_date">
       <DasType>DATE|0s</DasType>
       <NotNull>1</NotNull>
       <Position>6</Position>

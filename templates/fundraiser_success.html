@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+
+{% block title %}Fundraiser Created{% endblock %}
+
+{% block content %}
+
+<div class="container">
+
+  <h1>Fundraiser Created Successfully!</h1>
+
+  <div class="card">
+    <div class="card-body">
+      <h4 class="card-title">{{ fundraiser.name }}</h4>
+      <p class="card-text">{{ fundraiser.description }}</p>
+      <p class="text-muted">
+        End Date: {{ fundraiser.end_date.strftime("%B %d, %Y") }}<br>
+        Target Funds: {{ fundraiser.target_funds }}
+      </p>
+    </div>
+  </div>
+
+  <h2>Update Message</h2>
+
+  <form method="POST" action="/fundraiser/{{ fundraiser.id }}">
+
+    <div class="form-group">
+      <textarea class="form-control" id="message" name="message" rows="5"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Update</button>
+
+  </form>
+
+</div>
+
+{% endblock %}
