@@ -1,3 +1,5 @@
+import os
+from pathlib import Path
 from flask import Flask, render_template, redirect, url_for, request, session
 from flask_bootstrap import Bootstrap
 from flask_migrate import Migrate
@@ -11,6 +13,18 @@ Bootstrap(app)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///toa.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+# Get the path to the virtual environment configuration file
+venv_cfg_path = Path(os.environ.get('VIRTUAL_ENV')) / 'pyvenv.cfg'
+
+# Read the key from the configuration file
+with open(venv_cfg_path, 'r') as f:
+    for line in f:
+        if line.startswith('export SECRET_KEY='):
+            secret_key = line.split('=')[1].strip()
+            break
+
+app.config['SECRET_KEY'] = secret_key
 
 # Initialize SQLAlchemy with Flask app
 db.init_app(app)
@@ -31,7 +45,7 @@ def login():
             user = User.query.filter_by(username=username).first()
 
             if not user or not check_password_hash(user.password, password):
-                return error("User not found", 403)
+                return error("User not found or password incorrect", 403)
 
             session['user_id'] = user.id
             return redirect(url_for('index'))
@@ -46,15 +60,27 @@ def login():
 def register():
     if request.method == 'POST':
         username = request.form['username']
-        password = generate_password_hash(request.form['password'])
+        password = request.form['password']
+        confirm_password = request.form['confirm_password']
 
-        new_user = User(username=username, password=password)
+        # Password validation
+        if not password or not confirm_password:
+            return error("Password and confirmation password are required", 400)
+        if password != confirm_password:
+            return error("Passwords do not match", 400)
+
+        # Hash the password before storing
+        hashed_password = generate_password_hash(password)
+
+        # Rest of your registration logic
+        new_user = User(username=username, password=hashed_password)
         db.session.add(new_user)
         db.session.commit()
 
         return redirect(url_for('login'))
 
     return render_template('register.html')
+
 
 if __name__ == '__main__':
     app.run(debug=True)

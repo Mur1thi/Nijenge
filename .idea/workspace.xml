@@ -4,13 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bd2eadde-a61c-4464-8825-01a94251749e" name="Changes" comment="Sun 24th Dec 2023">
-      <change afterPath="$PROJECT_DIR$/instance/toa.db" afterDir="false" />
+    <list default="true" id="bd2eadde-a61c-4464-8825-01a94251749e" name="Changes" comment="Sun 24th Dec 2023 User Login logic and front end complete">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Toa" beforeDir="false" afterPath="$PROJECT_DIR$/Toa" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/error.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/error.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/login.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/instance/toa.db" beforeDir="false" afterPath="$PROJECT_DIR$/instance/toa.db" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/register.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/register.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,6 +28,17 @@
         <option value="CSS File" />
         <option value="HTML File" />
       </list>
+    </option>
+  </component>
+  <component name="FlaskConsoleOptions" custom-start-script="import sys&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;from flask.cli import ScriptInfo&#10;locals().update(ScriptInfo(create_app=None).load_app().make_shell_context())&#10;print(&quot;Python %s on %s\nApp: %s [%s]\nInstance: %s&quot; % (sys.version, sys.platform, app.import_name, app.env, app.instance_path))">
+    <envs>
+      <env key="FLASK_APP" value="app" />
+    </envs>
+    <option name="myCustomStartScript" value="import sys&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;from flask.cli import ScriptInfo&#10;locals().update(ScriptInfo(create_app=None).load_app().make_shell_context())&#10;print(&quot;Python %s on %s\nApp: %s [%s]\nInstance: %s&quot; % (sys.version, sys.platform, app.import_name, app.env, app.instance_path))" />
+    <option name="myEnvs">
+      <map>
+        <entry key="FLASK_APP" value="app" />
+      </map>
     </option>
   </component>
   <component name="Git.Settings">
@@ -130,7 +139,7 @@
       <workItem from="1703351415954" duration="11918000" />
       <workItem from="1703398956511" duration="4498000" />
       <workItem from="1703409478123" duration="232000" />
-      <workItem from="1703416467122" duration="656000" />
+      <workItem from="1703416467122" duration="4042000" />
     </task>
     <task id="LOCAL-00001" summary="Database, routes and login logic complete">
       <option name="closed" value="true" />
@@ -204,7 +213,23 @@
       <option name="project" value="LOCAL" />
       <updated>1703407114940</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="Sun 24th Dec 2023 User Login logic and front end complete">
+      <option name="closed" value="true" />
+      <created>1703417382527</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1703417382527</updated>
+    </task>
+    <task id="LOCAL-00011" summary="Sun 24th Dec 2023 User Login logic and front end complete">
+      <option name="closed" value="true" />
+      <created>1703417397936</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1703417397936</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -220,6 +245,7 @@
     <MESSAGE value="landing and base html updates" />
     <MESSAGE value="New HTML, CSS, JavaScript, new landing page" />
     <MESSAGE value="Sun 24th Dec 2023" />
-    <option name="LAST_COMMIT_MESSAGE" value="Sun 24th Dec 2023" />
+    <MESSAGE value="Sun 24th Dec 2023 User Login logic and front end complete" />
+    <option name="LAST_COMMIT_MESSAGE" value="Sun 24th Dec 2023 User Login logic and front end complete" />
   </component>
 </project>
