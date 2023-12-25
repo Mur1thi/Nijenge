@@ -4,7 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bd2eadde-a61c-4464-8825-01a94251749e" name="Changes" comment="Monday 25th Dec 2023 Fundraiser creation page logic implemented" />
+    <list default="true" id="bd2eadde-a61c-4464-8825-01a94251749e" name="Changes" comment="Monday 25th Dec 2023 Fundraiser creation updates">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/layout.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/layout.html" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -137,7 +140,7 @@
       <workItem from="1703416467122" duration="5752000" />
       <workItem from="1703437888733" duration="4831000" />
       <workItem from="1703445152719" duration="1300000" />
-      <workItem from="1703481591698" duration="1739000" />
+      <workItem from="1703481591698" duration="2479000" />
     </task>
     <task id="LOCAL-00001" summary="Database, routes and login logic complete">
       <option name="closed" value="true" />
@@ -251,7 +254,15 @@
       <option name="project" value="LOCAL" />
       <updated>1703484938740</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="Monday 25th Dec 2023 Fundraiser creation updates">
+      <option name="closed" value="true" />
+      <created>1703493300297</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1703493300297</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -271,6 +282,7 @@
     <MESSAGE value="Sun 24th Dec 2023 User registration and secret key implementation complete" />
     <MESSAGE value="Sun 24th Dec 2023 Fundraiser logic implemented" />
     <MESSAGE value="Monday 25th Dec 2023 Fundraiser creation page logic implemented" />
-    <option name="LAST_COMMIT_MESSAGE" value="Monday 25th Dec 2023 Fundraiser creation page logic implemented" />
+    <MESSAGE value="Monday 25th Dec 2023 Fundraiser creation updates" />
+    <option name="LAST_COMMIT_MESSAGE" value="Monday 25th Dec 2023 Fundraiser creation updates" />
   </component>
 </project>
