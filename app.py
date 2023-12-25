@@ -1,12 +1,13 @@
 import os
 from pathlib import Path
-from flask import Flask, render_template, redirect, url_for, request, session
+from flask import Flask, render_template, redirect, url_for, request, session, flash
 from flask_bootstrap import Bootstrap
 from flask_migrate import Migrate
 from flask import g
 from models import User, error, Fundraiser, login_required, has_active_fundraiser
 from werkzeug.security import generate_password_hash, check_password_hash
 from models import db
+from datetime import datetime
 
 app = Flask(__name__)
 Bootstrap(app)
@@ -106,7 +107,8 @@ def create_fundraiser():
     if request.method == 'POST':
         name = request.form['name']
         description = request.form['description']
-        end_date = request.form['end_date']
+        end_date = request.form['end_date']  # Extract from form data
+        end_date = datetime.strptime(end_date, "%Y-%m-%dT%H:%M")   # Convert to datetime
         target_funds = request.form['target_funds']
 
         try:
@@ -120,7 +122,7 @@ def create_fundraiser():
                 user_id=g.user.id,
                 name=name,
                 description=description,
-                end_date=end_date,
+                end_date=end_date,  # Use the formatted string
                 target_funds=target_funds
             )
             db.session.add(new_fundraiser)
@@ -133,6 +135,19 @@ def create_fundraiser():
 
     # Render the form for GET requests
     return render_template('fundraiser.html')
+
+@app.route('/fundraiser_success/<int:fundraiser_id>', methods=['GET', 'POST'])
+def fundraiser_success(fundraiser_id):
+    fundraiser = Fundraiser.query.get_or_404(fundraiser_id)
+
+    if request.method == 'POST':  # Handle form submission for updates
+        message = request.form['message']
+        # Implement logic to update the fundraiser with the message (e.g., add to a database)
+        flash("Fundraiser message updated successfully!", "success")
+        return redirect(url_for('fundraiser_success', fundraiser_id=fundraiser_id))
+
+    return render_template('fundraiser_success.html', fundraiser=fundraiser)
+
 
 
 if __name__ == '__main__':
