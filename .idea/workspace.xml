@@ -4,12 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bd2eadde-a61c-4464-8825-01a94251749e" name="Changes" comment="Sun 24th Dec 2023 Fundraiser logic implemented">
-      <change afterPath="$PROJECT_DIR$/migrations/versions/35c91e0a9dba_.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/instance/toa.db" beforeDir="false" afterPath="$PROJECT_DIR$/instance/toa.db" afterDir="false" />
-    </list>
+    <list default="true" id="bd2eadde-a61c-4464-8825-01a94251749e" name="Changes" comment="Monday 25th Dec 2023 Fundraiser creation page logic implemented" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -142,7 +137,7 @@
       <workItem from="1703416467122" duration="5752000" />
       <workItem from="1703437888733" duration="4831000" />
       <workItem from="1703445152719" duration="1300000" />
-      <workItem from="1703481591698" duration="1263000" />
+      <workItem from="1703481591698" duration="1739000" />
     </task>
     <task id="LOCAL-00001" summary="Database, routes and login logic complete">
       <option name="closed" value="true" />
@@ -248,7 +243,15 @@
       <option name="project" value="LOCAL" />
       <updated>1703445073928</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="Monday 25th Dec 2023 Fundraiser creation page logic implemented">
+      <option name="closed" value="true" />
+      <created>1703484938740</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1703484938740</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -267,6 +270,7 @@
     <MESSAGE value="Sun 24th Dec 2023 User Login logic and front end complete" />
     <MESSAGE value="Sun 24th Dec 2023 User registration and secret key implementation complete" />
     <MESSAGE value="Sun 24th Dec 2023 Fundraiser logic implemented" />
-    <option name="LAST_COMMIT_MESSAGE" value="Sun 24th Dec 2023 Fundraiser logic implemented" />
+    <MESSAGE value="Monday 25th Dec 2023 Fundraiser creation page logic implemented" />
+    <option name="LAST_COMMIT_MESSAGE" value="Monday 25th Dec 2023 Fundraiser creation page logic implemented" />
   </component>
 </project>
