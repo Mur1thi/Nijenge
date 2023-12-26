@@ -1,20 +1,22 @@
 import os
 from pathlib import Path
+
+from flask import Flask, g, request, session, redirect, url_for, render_template
 from flask_bootstrap import Bootstrap
 from flask_migrate import Migrate
-from sqlalchemy.exc import SQLAlchemyError
+from werkzeug.security import generate_password_hash, check_password_hash
 
 from models import User, error, Fundraiser, login_required, has_active_fundraiser, Contribution
-from werkzeug.security import generate_password_hash, check_password_hash
 from models import db
-from flask import Flask, g, request, session, redirect, url_for, flash, render_template
-from datetime import datetime
 
 app = Flask(__name__)
 Bootstrap(app)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///Toa.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///Toa.db"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+# Initialize Flask-SQLAlchemy
+db.init_app(app)
 
 # Get the path to the virtual environment configuration file
 venv_cfg_path = Path(os.environ.get('VIRTUAL_ENV')) / 'pyvenv.cfg'
@@ -28,8 +30,7 @@ with open(venv_cfg_path, 'r') as f:
 
 app.config['SECRET_KEY'] = secret_key
 
-# Initialize SQLAlchemy with Flask app
-db.init_app(app)
+# Initialize Flask-Migrate
 migrate = Migrate(app, db)
 
 
@@ -63,9 +64,9 @@ def login():
                 g.user = user  # Assign user to g for access in other routes
                 return redirect(url_for('index'))  # 'index' is the main page
             else:
-                flash("Invalid username or password", "error")  # Provide informative error message
+                return error ("Invalid username or password", 400)  # Provide informative error message
         except Exception as e:
-            flash("An error occurred during login. Please try again.", "error")  # Handling general errors
+            return error(str(e), 500)  # Handling general errors
 
     return render_template('login.html')  # Render login form for GET requests
 
@@ -166,69 +167,72 @@ from datetime import datetime
 import re  # Import regular expressions for robust parsing
 
 def save_contribution(fundraiser_id, message):
-    message = request.form['message']
-    print(f"Message: {message}")
+    try:
+        message = request.form['message']
+        print(f"Message: {message}")
 
-    contribution_reference = re.search(r'\b[A-Z0-9]{10}\b', message)
-    print(f"Contribution Reference Match: {contribution_reference}")
-    contribution_reference = contribution_reference.group()
+        contribution_reference = re.search(r'\b[A-Z0-9]{10}\b', message)
+        print(f"Contribution Reference Match: {contribution_reference}")
+        contribution_reference = contribution_reference.group()
 
-    amount = re.search(r'Ksh([\d,]+)\.', message)
-    print(f"Amount Match: {amount}")
-    amount = amount.group(1)
+        amount = re.search(r'Ksh([\d,]+)\.', message)
+        print(f"Amount Match: {amount}")
+        amount = amount.group(1)
 
-    contributor_name = re.search(r'from ([A-Z\s]+) \d', message)
-    print(f"Contributor Name Match: {contributor_name}")
-    contributor_name = contributor_name.group(1).strip()
+        contributor_name = re.search(r'from ([A-Z\s]+) \d', message)
+        print(f"Contributor Name Match: {contributor_name}")
+        contributor_name = contributor_name.group(1).strip()
 
-    phone_number = re.search(r'(\d+) on', message)
-    print(f"Phone Number Match: {phone_number}")
-    phone_number = phone_number.group(1)
+        phone_number = re.search(r'(\d+) on', message)
+        print(f"Phone Number Match: {phone_number}")
+        phone_number = phone_number.group(1)
 
-    contribution_date = re.search(r'on (\d{1,2}/\d{1,2}/\d{2}) at', message)
-    print(f"Contribution Date Match: {contribution_date}")
-    contribution_date = datetime.strptime(contribution_date.group(1), '%d/%m/%y').date()
+        contribution_date = re.search(r'on (\d{1,2}/\d{1,2}/\d{2}) at', message)
+        print(f"Contribution Date Match: {contribution_date}")
+        contribution_date = datetime.strptime(contribution_date.group(1), '%d/%m/%y').date()
 
-    contribution_time = re.search(r'at (\d{1,2}:\d{2} (?:AM|PM))', message)
-    print(f"Contribution Time Match: {contribution_time}")
-    contribution_time = datetime.strptime(contribution_time.group(1), '%I:%M %p').time()
+        contribution_time = re.search(r'at (\d{1,2}:\d{2} (?:AM|PM))', message)
+        print(f"Contribution Time Match: {contribution_time}")
+        contribution_time = datetime.strptime(contribution_time.group(1), '%I:%M %p').time()
 
-    # Create a new Contribution object
-    contribution = Contribution(
-        fundraiser_id=fundraiser_id,
-        contribution_reference=contribution_reference,
-        contributor_name=contributor_name,
-        phone_number=phone_number,
-        amount=amount.replace(',', ''),  # Remove the comma before saving
-        contribution_date=contribution_date,
-        contribution_time=contribution_time
-    )
+        # Create a new Contribution object
+        contribution = Contribution(
+            fundraiser_id=fundraiser_id,
+            contribution_reference=contribution_reference,
+            contributor_name=contributor_name,
+            phone_number=phone_number,
+            amount=amount.replace(',', ''),
+            contribution_date=contribution_date,
+            contribution_time=contribution_time
+        )
+        # Add the new Contribution to the current database session
+        db.session.add(contribution)
 
-    # Print the contribution columns
-    print(f"\nFundraiser ID: {contribution.fundraiser_id}")
-    print(f"Contribution Reference: {contribution.contribution_reference}")
-    print(f"Contributor Name: {contribution.contributor_name}")
-    print(f"Phone Number: {contribution.phone_number}")
-    print(f"Amount: {contribution.amount}")
-    print(f"Contribution Date: {contribution.contribution_date}")
-    print(f"Contribution Time: {contribution.contribution_time}")
+        # Commit the changes to save the new Contribution to the database
+        db.session.commit()
 
-    # Add the new Contribution to the current database session
-    db.session.add(contribution)
+        # Print the contribution columns
+        print(f"\nFundraiser ID: {contribution.fundraiser_id}")
+        print(f"Contribution Reference: {contribution.contribution_reference}")
+        print(f"Contributor Name: {contribution.contributor_name}")
+        print(f"Phone Number: {contribution.phone_number}")
+        print(f"Amount: {contribution.amount}")
+        print(f"Contribution Date: {contribution.contribution_date}")
+        print(f"Contribution Time: {contribution.contribution_time}")
 
-    # Commit the changes to save the new Contribution to the database
-    db.session.commit()
+        return {
+            'fundraiser_id': fundraiser_id,
+            'contribution_reference': contribution_reference,
+            'amount': amount,
+            'contributor_name': contributor_name,
+            'phone_number': phone_number,
+            'contribution_date': contribution_date,
+            'contribution_time': contribution_time,
+        }
 
-    return {
-        'fundraiser_id': fundraiser_id,
-        'contribution_reference': contribution_reference,
-        'amount': amount,
-        'contributor_name': contributor_name,
-        'phone_number': phone_number,
-        'contribution_date': contribution_date,
-        'contribution_time': contribution_time,
-    }
-
+    except Exception as e:
+        # Use your error function to handle exceptions
+        return error(str(e), 500)
 
 
 # End of save_contribution

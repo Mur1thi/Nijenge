@@ -4,15 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bd2eadde-a61c-4464-8825-01a94251749e" name="Changes" comment="Monday 25th Dec 2023 browser tab icon added to the layout.html">
-      <change afterPath="$PROJECT_DIR$/migrations/versions/dc1469b7c469_add_contribution_reference_to_.py" afterDir="false" />
+    <list default="true" id="bd2eadde-a61c-4464-8825-01a94251749e" name="Changes" comment="Tuesday 26th Dec 2023 Update message, save_contribution function implemented and saved">
+      <change afterPath="$PROJECT_DIR$/instance/Toa" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/dataSources/230a360b-f9bb-4ad0-8f10-fddf25d10089.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/230a360b-f9bb-4ad0-8f10-fddf25d10089.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Toa" beforeDir="false" afterPath="$PROJECT_DIR$/Toa" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/instance/toa.db" beforeDir="false" afterPath="$PROJECT_DIR$/instance/toa.db" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/fundraiser_success.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/fundraiser_success.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -150,7 +147,9 @@
       <workItem from="1703515894531" duration="5648000" />
       <workItem from="1703533157119" duration="6083000" />
       <workItem from="1703571975964" duration="602000" />
-      <workItem from="1703576777672" duration="4362000" />
+      <workItem from="1703576777672" duration="5142000" />
+      <workItem from="1703583870588" duration="56000" />
+      <workItem from="1703584081478" duration="4593000" />
     </task>
     <task id="LOCAL-00001" summary="Database, routes and login logic complete">
       <option name="closed" value="true" />
@@ -280,7 +279,15 @@
       <option name="project" value="LOCAL" />
       <updated>1703493994934</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="Tuesday 26th Dec 2023 Update message, save_contribution function implemented and saved">
+      <option name="closed" value="true" />
+      <created>1703583324453</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1703583324453</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -302,6 +309,7 @@
     <MESSAGE value="Monday 25th Dec 2023 Fundraiser creation page logic implemented" />
     <MESSAGE value="Monday 25th Dec 2023 Fundraiser creation updates" />
     <MESSAGE value="Monday 25th Dec 2023 browser tab icon added to the layout.html" />
-    <option name="LAST_COMMIT_MESSAGE" value="Monday 25th Dec 2023 browser tab icon added to the layout.html" />
+    <MESSAGE value="Tuesday 26th Dec 2023 Update message, save_contribution function implemented and saved" />
+    <option name="LAST_COMMIT_MESSAGE" value="Tuesday 26th Dec 2023 Update message, save_contribution function implemented and saved" />
   </component>
 </project>
