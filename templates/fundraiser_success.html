@@ -21,7 +21,9 @@
 
   <h2>Update Message</h2>
 
-  <form method="POST" action="/fundraiser/{{ fundraiser.id }}">
+  <form method="POST" action="/fundraiser_success/{{ fundraiser.id }}">
+
+    <input type="hidden" name="fundraiser_id" value="{{ fundraiser.id }}">
 
     <div class="form-group">
       <textarea class="form-control" id="message" name="message" rows="5"></textarea>

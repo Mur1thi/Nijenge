@@ -68,13 +68,18 @@ def has_active_fundraiser():
 
 
 class Contribution(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    fundraiser_id = db.Column(db.Integer, db.ForeignKey('fundraiser.id'), nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    amount = db.Column(db.Integer, nullable=False)
+    __tablename__ = 'contributions'
 
-    fundraiser = db.relationship('Fundraiser', backref=db.backref('contributions', lazy=True))
-    user = db.relationship('User', backref=db.backref('contributions', lazy=True))
+    contribution_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    fundraiser_id = db.Column(db.Integer, db.ForeignKey('fundraiser.id'), nullable=False)
+    contribution_reference = db.Column(db.Text, nullable=False)
+    contributor_name = db.Column(db.Text, nullable=False)
+    phone_number = db.Column(db.Text, nullable=False)
+    amount = db.Column(db.DECIMAL, nullable=False)
+    contribution_date = db.Column(db.Date, nullable=False)
+    contribution_time = db.Column(db.Time, nullable=False)
+
+    fundraiser = db.relationship('Fundraiser', backref='contributions')
 
     def __repr__(self):
-        return f'<Contribution ${self.amount} to {self.fundraiser.name}>'
+        return f'<Contribution {self.contribution_id} for Fundraiser {self.fundraiser_id}>'

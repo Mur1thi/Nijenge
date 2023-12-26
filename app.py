@@ -1,18 +1,19 @@
 import os
 from pathlib import Path
-from flask import Flask, render_template, redirect, url_for, request, session, flash
 from flask_bootstrap import Bootstrap
 from flask_migrate import Migrate
-from flask import g
-from models import User, error, Fundraiser, login_required, has_active_fundraiser
+from sqlalchemy.exc import SQLAlchemyError
+
+from models import User, error, Fundraiser, login_required, has_active_fundraiser, Contribution
 from werkzeug.security import generate_password_hash, check_password_hash
 from models import db
+from flask import Flask, g, request, session, redirect, url_for, flash, render_template
 from datetime import datetime
 
 app = Flask(__name__)
 Bootstrap(app)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///toa.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///Toa.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Get the path to the virtual environment configuration file
@@ -31,9 +32,11 @@ app.config['SECRET_KEY'] = secret_key
 db.init_app(app)
 migrate = Migrate(app, db)
 
+
 @app.route('/')
 def index():
     return render_template('index.html')
+
 
 @app.route('/logout')
 def logout():
@@ -46,7 +49,6 @@ def logout():
     return redirect(url_for('index'))
 
 
-
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -56,17 +58,17 @@ def login():
         try:
             user = User.query.filter_by(username=username).first()
 
-            if not user or not check_password_hash(user.password, password):
-                return error("User not found or password incorrect", 403)
-
-            session['user_id'] = user.id
-            return redirect(url_for('index'))
-
+            if user and check_password_hash(user.password, password):
+                session['user_id'] = user.id
+                g.user = user  # Assign user to g for access in other routes
+                return redirect(url_for('index'))  # 'index' is the main page
+            else:
+                flash("Invalid username or password", "error")  # Provide informative error message
         except Exception as e:
-            # catch any other exceptions
-            return error(str(e), 500)
+            flash("An error occurred during login. Please try again.", "error")  # Handling general errors
 
-    return render_template('login.html')
+    return render_template('login.html')  # Render login form for GET requests
+
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -93,6 +95,7 @@ def register():
 
     return render_template('register.html')
 
+
 @app.route('/fundraiser', methods=['GET', 'POST'])
 @login_required  # Decorator to check for login status
 def fundraiser():
@@ -103,19 +106,22 @@ def fundraiser():
     else:
         return create_fundraiser()
 
+
 def create_fundraiser():
     if request.method == 'POST':
         name = request.form['name']
         description = request.form['description']
         end_date = request.form['end_date']  # Extract from form data
-        end_date = datetime.strptime(end_date, "%Y-%m-%dT%H:%M")   # Convert to datetime
+        end_date = datetime.strptime(end_date, "%Y-%m-%dT%H:%M")  # Convert to datetime
         target_funds = request.form['target_funds']
 
         try:
             # Check if user already has an active fundraiser
             user_fundraiser = Fundraiser.query.filter_by(user_id=g.user.id).first()
             if user_fundraiser:
-                return error("You already have an active fundraiser. Please complete or cancel it before creating a new one.", 400)
+                return error(
+                    "You already have an active fundraiser. Please complete or cancel it before creating a new one.",
+                    400)
 
             # Create the new fundraiser
             new_fundraiser = Fundraiser(
@@ -134,20 +140,98 @@ def create_fundraiser():
             return error(str(e), 500)  # Handle any errors
 
     # Render the form for GET requests
-    return render_template('fundraiser.html')
+    # Retrieve the fundraiser object
+    fundraiser = Fundraiser.query.filter_by(user_id=g.user.id).first()
+    return render_template('fundraiser.html', fundraiser=fundraiser)
+
 
 @app.route('/fundraiser_success/<int:fundraiser_id>', methods=['GET', 'POST'])
+@login_required  # Ensures the user is logged in
 def fundraiser_success(fundraiser_id):
-    fundraiser = Fundraiser.query.get_or_404(fundraiser_id)
+    fundraiser = Fundraiser.query.get_or_404(fundraiser_id)  # Retrieve fundraiser
 
-    if request.method == 'POST':  # Handle form submission for updates
-        message = request.form['message']
-        # Implement logic to update the fundraiser with the message (e.g., add to a database)
-        flash("Fundraiser message updated successfully!", "success")
-        return redirect(url_for('fundraiser_success', fundraiser_id=fundraiser_id))
+    if request.method == 'POST':
+        message = request.form['message']  # Extract from form data
+        save_contribution(fundraiser_id, message)
+        return redirect(
+            url_for('fundraiser_success', fundraiser_id=fundraiser_id))  # Redirect after saving contribution
+    else:
+        if not fundraiser:
+            return error("Error updating fundraiser", 404)
+        # Render the success page for GET requests
+        return render_template('fundraiser_success.html', fundraiser=fundraiser)
 
-    return render_template('fundraiser_success.html', fundraiser=fundraiser)
 
+from datetime import datetime
+import re  # Import regular expressions for robust parsing
+
+def save_contribution(fundraiser_id, message):
+    message = request.form['message']
+    print(f"Message: {message}")
+
+    contribution_reference = re.search(r'\b[A-Z0-9]{10}\b', message)
+    print(f"Contribution Reference Match: {contribution_reference}")
+    contribution_reference = contribution_reference.group()
+
+    amount = re.search(r'Ksh([\d,]+)\.', message)
+    print(f"Amount Match: {amount}")
+    amount = amount.group(1)
+
+    contributor_name = re.search(r'from ([A-Z\s]+) \d', message)
+    print(f"Contributor Name Match: {contributor_name}")
+    contributor_name = contributor_name.group(1).strip()
+
+    phone_number = re.search(r'(\d+) on', message)
+    print(f"Phone Number Match: {phone_number}")
+    phone_number = phone_number.group(1)
+
+    contribution_date = re.search(r'on (\d{1,2}/\d{1,2}/\d{2}) at', message)
+    print(f"Contribution Date Match: {contribution_date}")
+    contribution_date = datetime.strptime(contribution_date.group(1), '%d/%m/%y').date()
+
+    contribution_time = re.search(r'at (\d{1,2}:\d{2} (?:AM|PM))', message)
+    print(f"Contribution Time Match: {contribution_time}")
+    contribution_time = datetime.strptime(contribution_time.group(1), '%I:%M %p').time()
+
+    # Create a new Contribution object
+    contribution = Contribution(
+        fundraiser_id=fundraiser_id,
+        contribution_reference=contribution_reference,
+        contributor_name=contributor_name,
+        phone_number=phone_number,
+        amount=amount.replace(',', ''),  # Remove the comma before saving
+        contribution_date=contribution_date,
+        contribution_time=contribution_time
+    )
+
+    # Print the contribution columns
+    print(f"\nFundraiser ID: {contribution.fundraiser_id}")
+    print(f"Contribution Reference: {contribution.contribution_reference}")
+    print(f"Contributor Name: {contribution.contributor_name}")
+    print(f"Phone Number: {contribution.phone_number}")
+    print(f"Amount: {contribution.amount}")
+    print(f"Contribution Date: {contribution.contribution_date}")
+    print(f"Contribution Time: {contribution.contribution_time}")
+
+    # Add the new Contribution to the current database session
+    db.session.add(contribution)
+
+    # Commit the changes to save the new Contribution to the database
+    db.session.commit()
+
+    return {
+        'fundraiser_id': fundraiser_id,
+        'contribution_reference': contribution_reference,
+        'amount': amount,
+        'contributor_name': contributor_name,
+        'phone_number': phone_number,
+        'contribution_date': contribution_date,
+        'contribution_time': contribution_time,
+    }
+
+
+
+# End of save_contribution
 
 
 if __name__ == '__main__':
