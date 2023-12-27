@@ -4,11 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bd2eadde-a61c-4464-8825-01a94251749e" name="Changes" comment="Wednesday 27th Dec 2023 notyf.js">
+    <list default="true" id="bd2eadde-a61c-4464-8825-01a94251749e" name="Changes" comment="Wednesday 27th Dec 2023 removed notyy and implemented error function">
+      <change afterPath="$PROJECT_DIR$/static/js/Toastr.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/instance/toa.db" beforeDir="false" afterPath="$PROJECT_DIR$/instance/toa.db" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/js/notyf.js" beforeDir="false" afterPath="$PROJECT_DIR$/static/js/notyf.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/js/notyf.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/fundraiser_success.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/fundraiser_success.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/layout.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/layout.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -148,7 +150,7 @@
       <workItem from="1703583870588" duration="56000" />
       <workItem from="1703584081478" duration="12215000" />
       <workItem from="1703604786577" duration="860000" />
-      <workItem from="1703656393296" duration="6694000" />
+      <workItem from="1703656393296" duration="8424000" />
     </task>
     <task id="LOCAL-00001" summary="Database, routes and login logic complete">
       <option name="closed" value="true" />
@@ -302,7 +304,15 @@
       <option name="project" value="LOCAL" />
       <updated>1703666020885</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="Wednesday 27th Dec 2023 removed notyy and implemented error function">
+      <option name="closed" value="true" />
+      <created>1703667733737</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1703667733737</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -327,6 +337,7 @@
     <MESSAGE value="Tuesday 26th Dec 2023 Update message, save_contribution function implemented and saved" />
     <MESSAGE value="Tuesday 26th Dec 2023 Fundraiser and Contributions functionality completed." />
     <MESSAGE value="Wednesday 27th Dec 2023 notyf.js" />
-    <option name="LAST_COMMIT_MESSAGE" value="Wednesday 27th Dec 2023 notyf.js" />
+    <MESSAGE value="Wednesday 27th Dec 2023 removed notyy and implemented error function" />
+    <option name="LAST_COMMIT_MESSAGE" value="Wednesday 27th Dec 2023 removed notyy and implemented error function" />
   </component>
 </project>

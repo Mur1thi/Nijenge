@@ -212,7 +212,10 @@ def save_contribution(fundraiser_id, message):
         try:
             db.session.commit()
         except Exception as e:
-            return error(str(e), 500)
+            return {
+                'status': 'error',
+                'message': str(e)
+            }
 
         # Print the new Contribution ID
         print(f"New Contribution ID: {contribution.contribution_id}")
@@ -226,6 +229,8 @@ def save_contribution(fundraiser_id, message):
         print(f"Contribution Time: {contribution.contribution_time}")
 
         return {
+            'status': 'success',
+            'message': 'Contribution saved successfully!',
             'data': {
             'fundraiser_id': fundraiser_id,
             'contribution_reference': contribution_reference,
@@ -238,7 +243,10 @@ def save_contribution(fundraiser_id, message):
         }
 
     except Exception as e:
-        return error(str(e), 500)
+        return {
+            'status': 'error',
+            'message': str(e)
+        }
 
 
 # End of save_contribution

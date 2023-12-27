@@ -23,7 +23,7 @@
 
   <form method="POST" action="/fundraiser_success/{{ fundraiser.id }}">
 
-    <input type="hidden" name="fundraiser_id" value="{{ fundraiser.id }}">
+    <input type="hidden" id="fundraiserId" name="fundraiser_id" value="{{ fundraiser.id }}">
 
     <div class="form-group">
       <textarea class="form-control" id="message" name="message" rows="5"></textarea>
@@ -34,5 +34,7 @@
   </form>
 
 </div>
+
+<script src="{{ url_for('static', filename='js/Toastr.js') }}"></script>
 
 {% endblock %}
