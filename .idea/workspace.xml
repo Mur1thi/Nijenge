@@ -4,17 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bd2eadde-a61c-4464-8825-01a94251749e" name="Changes" comment="Tuesday 26th Dec 2023 Fundraiser and Contributions functionality completed.">
-      <change afterPath="$PROJECT_DIR$/static/js/notyf.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/230a360b-f9bb-4ad0-8f10-fddf25d10089.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/230a360b-f9bb-4ad0-8f10-fddf25d10089/storage_v2/_src_/schema/main.uQUzAA.meta" beforeDir="false" />
+    <list default="true" id="bd2eadde-a61c-4464-8825-01a94251749e" name="Changes" comment="Wednesday 27th Dec 2023 notyf.js">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/instance/toa.db" beforeDir="false" afterPath="$PROJECT_DIR$/instance/toa.db" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/js/scripts.js" beforeDir="false" afterPath="$PROJECT_DIR$/static/js/scripts.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/fundraiser_success.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/fundraiser_success.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/js/notyf.js" beforeDir="false" afterPath="$PROJECT_DIR$/static/js/notyf.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/layout.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/layout.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -154,7 +148,7 @@
       <workItem from="1703583870588" duration="56000" />
       <workItem from="1703584081478" duration="12215000" />
       <workItem from="1703604786577" duration="860000" />
-      <workItem from="1703656393296" duration="4799000" />
+      <workItem from="1703656393296" duration="6694000" />
     </task>
     <task id="LOCAL-00001" summary="Database, routes and login logic complete">
       <option name="closed" value="true" />
@@ -300,7 +294,15 @@
       <option name="project" value="LOCAL" />
       <updated>1703590976468</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="Wednesday 27th Dec 2023 notyf.js">
+      <option name="closed" value="true" />
+      <created>1703666020885</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1703666020885</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -324,6 +326,7 @@
     <MESSAGE value="Monday 25th Dec 2023 browser tab icon added to the layout.html" />
     <MESSAGE value="Tuesday 26th Dec 2023 Update message, save_contribution function implemented and saved" />
     <MESSAGE value="Tuesday 26th Dec 2023 Fundraiser and Contributions functionality completed." />
-    <option name="LAST_COMMIT_MESSAGE" value="Tuesday 26th Dec 2023 Fundraiser and Contributions functionality completed." />
+    <MESSAGE value="Wednesday 27th Dec 2023 notyf.js" />
+    <option name="LAST_COMMIT_MESSAGE" value="Wednesday 27th Dec 2023 notyf.js" />
   </component>
 </project>

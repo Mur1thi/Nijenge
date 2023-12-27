@@ -1,21 +1,17 @@
-// Get DOM elements
-const messageInput = document.getElementById('message');
-// Get reference to button
-const updateButton = document.getElementById('update-button');
+document.addEventListener('DOMContentLoaded', function () {
+  const updateButton = document.getElementById('update-button');
+  const messageInput = document.getElementById('message');
+
+  updateButton.addEventListener('click', function () {
+    const message = messageInput.value;
+    const fundraiserIdInput = document.getElementById('fundraiserId');
+    const fundraiserId = fundraiserIdInput.value;
+
+    saveContribution(fundraiserId, message);
+  });
+});
 
 
-// Save contribution handler
-updateButton.addEventListener('click',
-    function () {
-
-      // Get data
-      const message = messageInput.value;
-      const fundraiserIdInput = document.getElementById('fundraiserId');
-
-      // Call save contribution
-      saveContribution(fundraiserId, message);
-
-    });
 
 
 // Save contribution function
