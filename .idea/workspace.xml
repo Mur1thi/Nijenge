@@ -4,22 +4,23 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bd2eadde-a61c-4464-8825-01a94251749e" name="Changes" comment="Tuesday 26th Dec 2023 Update message, save_contribution function implemented and saved">
-      <change afterPath="$PROJECT_DIR$/instance/Toa" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/230a360b-f9bb-4ad0-8f10-fddf25d10089.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/230a360b-f9bb-4ad0-8f10-fddf25d10089.xml" afterDir="false" />
+    <list default="true" id="bd2eadde-a61c-4464-8825-01a94251749e" name="Changes" comment="Tuesday 26th Dec 2023 Fundraiser and Contributions functionality completed.">
+      <change afterPath="$PROJECT_DIR$/static/js/notyf.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/230a360b-f9bb-4ad0-8f10-fddf25d10089.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/230a360b-f9bb-4ad0-8f10-fddf25d10089/storage_v2/_src_/schema/main.uQUzAA.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/instance/toa.db" beforeDir="false" afterPath="$PROJECT_DIR$/instance/toa.db" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/js/scripts.js" beforeDir="false" afterPath="$PROJECT_DIR$/static/js/scripts.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/fundraiser_success.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/fundraiser_success.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/layout.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/layout.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
-  </component>
-  <component name="DatabaseLocalColorSettings">
-    <colors>
-      <entry key="230a360b-f9bb-4ad0-8f10-fddf25d10089" value="Green" />
-    </colors>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -28,6 +29,7 @@
         <option value="Python Script" />
         <option value="CSS File" />
         <option value="HTML File" />
+        <option value="JavaScript File" />
       </list>
     </option>
   </component>
@@ -74,6 +76,7 @@
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;advanced.settings&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
   &quot;keyToStringList&quot;: {
@@ -149,7 +152,9 @@
       <workItem from="1703571975964" duration="602000" />
       <workItem from="1703576777672" duration="5142000" />
       <workItem from="1703583870588" duration="56000" />
-      <workItem from="1703584081478" duration="4593000" />
+      <workItem from="1703584081478" duration="12215000" />
+      <workItem from="1703604786577" duration="860000" />
+      <workItem from="1703656393296" duration="4799000" />
     </task>
     <task id="LOCAL-00001" summary="Database, routes and login logic complete">
       <option name="closed" value="true" />
@@ -287,7 +292,15 @@
       <option name="project" value="LOCAL" />
       <updated>1703583324453</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="Tuesday 26th Dec 2023 Fundraiser and Contributions functionality completed.">
+      <option name="closed" value="true" />
+      <created>1703590976468</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1703590976468</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -310,6 +323,7 @@
     <MESSAGE value="Monday 25th Dec 2023 Fundraiser creation updates" />
     <MESSAGE value="Monday 25th Dec 2023 browser tab icon added to the layout.html" />
     <MESSAGE value="Tuesday 26th Dec 2023 Update message, save_contribution function implemented and saved" />
-    <option name="LAST_COMMIT_MESSAGE" value="Tuesday 26th Dec 2023 Update message, save_contribution function implemented and saved" />
+    <MESSAGE value="Tuesday 26th Dec 2023 Fundraiser and Contributions functionality completed." />
+    <option name="LAST_COMMIT_MESSAGE" value="Tuesday 26th Dec 2023 Fundraiser and Contributions functionality completed." />
   </component>
 </project>

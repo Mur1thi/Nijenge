@@ -1,6 +1,5 @@
 import os
 from pathlib import Path
-
 from flask import Flask, g, request, session, redirect, url_for, render_template
 from flask_bootstrap import Bootstrap
 from flask_migrate import Migrate
@@ -64,7 +63,7 @@ def login():
                 g.user = user  # Assign user to g for access in other routes
                 return redirect(url_for('index'))  # 'index' is the main page
             else:
-                return error ("Invalid username or password", 400)  # Provide informative error message
+                return error("Invalid username or password", 400)  # Provide informative error message
         except Exception as e:
             return error(str(e), 500)  # Handling general errors
 
@@ -166,6 +165,7 @@ def fundraiser_success(fundraiser_id):
 from datetime import datetime
 import re  # Import regular expressions for robust parsing
 
+
 def save_contribution(fundraiser_id, message):
     try:
         message = request.form['message']
@@ -208,9 +208,20 @@ def save_contribution(fundraiser_id, message):
         # Add the new Contribution to the current database session
         db.session.add(contribution)
 
-        # Commit the changes to save the new Contribution to the database
-        db.session.commit()
+        # Try to commit the changes to save the new Contribution to the database
+        try:
+            db.session.commit()
+        except Exception as e:
+            return {
 
+                'status': 'error',
+
+                'message': str(e),
+
+            }
+
+        # Print the new Contribution ID
+        print(f"New Contribution ID: {contribution.contribution_id}")
         # Print the contribution columns
         print(f"\nFundraiser ID: {contribution.fundraiser_id}")
         print(f"Contribution Reference: {contribution.contribution_reference}")
@@ -221,6 +232,9 @@ def save_contribution(fundraiser_id, message):
         print(f"Contribution Time: {contribution.contribution_time}")
 
         return {
+            'status': 'success',
+            'message': 'Contribution saved successfully!',
+            'data': {
             'fundraiser_id': fundraiser_id,
             'contribution_reference': contribution_reference,
             'amount': amount,
@@ -228,11 +242,17 @@ def save_contribution(fundraiser_id, message):
             'phone_number': phone_number,
             'contribution_date': contribution_date,
             'contribution_time': contribution_time,
+            }
         }
 
     except Exception as e:
-        # Use your error function to handle exceptions
-        return error(str(e), 500)
+        return {
+
+            'status': 'error',
+
+            'message': str(e),
+
+        }
 
 
 # End of save_contribution

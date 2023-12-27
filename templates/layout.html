@@ -31,25 +31,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
   <title>{% block title %}{% endblock %}</title>
-
   <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css">
+<script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
+
 </head>
 
 <body>
 
   {{ navbar() }}
-          {% if get_flashed_messages() %}
-            <header>
-                <div class="alert alert-primary mb-0 text-center" role="alert">
-                    {{ get_flashed_messages() | join(" ") }}
-                </div>
-            </header>
-        {% endif %}
 
 <div class="content-wrapper">
   <main>
     {% block content %}{% endblock %}
   </main>
 </div>
+<script src="{{ url_for('static', filename='js/notyf.js') }}"></script>
 </body>
 </html>
