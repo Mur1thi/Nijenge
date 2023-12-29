@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', function () {
     .done(function(response) {
       if (response.status === 'success') {
         toastr.success(response.message);
+        $('#message').val(''); // Clear the text area
       } else {
         toastr.error(response.message);
       }

@@ -102,7 +102,8 @@ def fundraiser():
     if has_active_fundraiser():
         # Redirect to fundraiser_success page if user has an active fundraiser
         user_fundraiser = Fundraiser.query.filter_by(user_id=g.user.id).first()
-        return redirect(url_for('fundraiser_success', fundraiser_id=user_fundraiser.id))
+        print("Fundraiser ID:", user_fundraiser.id)  # Print the fundraiser ID
+        return render_template('fundraiser_success.html', fundraiser_id=user_fundraiser.id, fundraiser=user_fundraiser)
     else:
         return create_fundraiser()
 
@@ -146,8 +147,8 @@ def create_fundraiser():
 
 from datetime import datetime
 import re  # Import regular expressions for robust parsing
-@app.route('/fundraiser_success/<int:fundraiser_id>/<string:message>', methods=['GET', 'POST'])
-@login_required  # Ensures the user is logged in
+@app.route('/fundraiser_success/<int:fundraiser_id>', methods=['GET', 'POST'])
+@login_required # Ensures the user is logged in
 def save_contribution(fundraiser_id):
     if request.method == 'POST':
         message = request.form['message']
@@ -175,7 +176,7 @@ def save_contribution(fundraiser_id):
 
         contribution_time = re.search(r'at (\d{1,2}:\d{2} (?:AM|PM))', message)
         print(f"Contribution Time Match: {contribution_time}")
-        contribution_time = datetime.strptime(contribution_time.group(1), '%I:%M %p').time()
+        contribution_time = str(datetime.strptime(contribution_time.group(1), '%I:%M %p').time())
 
         # Create a new Contribution object
         contribution = Contribution(
@@ -185,8 +186,15 @@ def save_contribution(fundraiser_id):
             phone_number=phone_number,
             amount=amount.replace(',', ''),
             contribution_date=contribution_date,
-            contribution_time=contribution_time
+            contribution_time=datetime.strptime(contribution_time, '%H:%M:%S').time()
         )
+        print(f"Fundraiser ID: {fundraiser_id}")
+        print(f"Contribution Date: {contribution.contribution_date}")
+        print(f"Contribution Time: {contribution.contribution_time}")
+        print(f"Contribution Reference: {contribution.contribution_reference}")
+        print(f"Contributor Name: {contribution.contributor_name}")
+        print(f"Phone Number: {contribution.phone_number}")
+        print(f"Amount: {contribution.amount}")
         # Add the new Contribution to the current database session
         db.session.add(contribution)
 
@@ -212,10 +220,13 @@ def save_contribution(fundraiser_id):
             'contribution_time': contribution_time,
             }
         }
-    else:
-        # handle GET request
+        # Render the form for a fresh Update request
         # Retrieve the fundraiser object
-        fundraiser = Fundraiser.query.filter_by(id=fundraiser_id).first()
+
+    else:
+        # handle GET request...
+        # Retrieve the fundraiser object
+        fundraiser = Fundraiser.query.filter_by(user_id=g.user.id).first()
         return render_template('fundraiser_success.html', fundraiser=fundraiser)
 
 if __name__ == '__main__':

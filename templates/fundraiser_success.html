@@ -21,7 +21,7 @@
 
   <h2>Update Message</h2>
 
-  <form method="POST" action="{{ url_for('fundraiser_success', fundraiser_id=fundraiser.id, message='Updated message') }}">
+  <form method="POST" action="/fundraiser_success/{{ fundraiser.id }}">
 
     <input type="hidden" id="fundraiserId" name="fundraiser_id" value="{{ fundraiser.id }}">
 
