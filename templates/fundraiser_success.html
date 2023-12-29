@@ -21,7 +21,7 @@
 
   <h2>Update Message</h2>
 
-  <form method="POST" action="/fundraiser_success/{{ fundraiser.id }}">
+  <form method="POST" action="{{ url_for('fundraiser_success', fundraiser_id=fundraiser.id, message='Updated message') }}">
 
     <input type="hidden" id="fundraiserId" name="fundraiser_id" value="{{ fundraiser.id }}">
 
@@ -34,7 +34,5 @@
   </form>
 
 </div>
-
-<script src="{{ url_for('static', filename='js/Toastr.js') }}"></script>
 
 {% endblock %}

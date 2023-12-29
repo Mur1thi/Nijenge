@@ -4,13 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bd2eadde-a61c-4464-8825-01a94251749e" name="Changes" comment="Wednesday 27th Dec 2023 removed notyy and implemented error function">
-      <change afterPath="$PROJECT_DIR$/static/js/Toastr.js" afterDir="false" />
+    <list default="true" id="bd2eadde-a61c-4464-8825-01a94251749e" name="Changes" comment="Toastr notifications code written. Yet to troubleshoot the Update post bug">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/js/notyf.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/instance/toa.db" beforeDir="false" afterPath="$PROJECT_DIR$/instance/toa.db" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/js/Toastr.js" beforeDir="false" afterPath="$PROJECT_DIR$/static/js/Toastr.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/fundraiser_success.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/fundraiser_success.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/layout.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/layout.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -150,7 +149,11 @@
       <workItem from="1703583870588" duration="56000" />
       <workItem from="1703584081478" duration="12215000" />
       <workItem from="1703604786577" duration="860000" />
-      <workItem from="1703656393296" duration="8424000" />
+      <workItem from="1703656393296" duration="8584000" />
+      <workItem from="1703669619896" duration="2817000" />
+      <workItem from="1703703391193" duration="3573000" />
+      <workItem from="1703748462489" duration="513000" />
+      <workItem from="1703829573468" duration="4009000" />
     </task>
     <task id="LOCAL-00001" summary="Database, routes and login logic complete">
       <option name="closed" value="true" />
@@ -312,7 +315,15 @@
       <option name="project" value="LOCAL" />
       <updated>1703667733737</updated>
     </task>
-    <option name="localTasksCounter" value="21" />
+    <task id="LOCAL-00021" summary="Toastr notifications code written. Yet to troubleshoot the Update post bug">
+      <option name="closed" value="true" />
+      <created>1703669587257</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1703669587257</updated>
+    </task>
+    <option name="localTasksCounter" value="22" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -338,6 +349,7 @@
     <MESSAGE value="Tuesday 26th Dec 2023 Fundraiser and Contributions functionality completed." />
     <MESSAGE value="Wednesday 27th Dec 2023 notyf.js" />
     <MESSAGE value="Wednesday 27th Dec 2023 removed notyy and implemented error function" />
-    <option name="LAST_COMMIT_MESSAGE" value="Wednesday 27th Dec 2023 removed notyy and implemented error function" />
+    <MESSAGE value="Toastr notifications code written. Yet to troubleshoot the Update post bug" />
+    <option name="LAST_COMMIT_MESSAGE" value="Toastr notifications code written. Yet to troubleshoot the Update post bug" />
   </component>
 </project>

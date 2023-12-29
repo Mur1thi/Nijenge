@@ -144,30 +144,12 @@ def create_fundraiser():
     fundraiser = Fundraiser.query.filter_by(user_id=g.user.id).first()
     return render_template('fundraiser.html', fundraiser=fundraiser)
 
-
-@app.route('/fundraiser_success/<int:fundraiser_id>', methods=['GET', 'POST'])
-@login_required  # Ensures the user is logged in
-def fundraiser_success(fundraiser_id):
-    fundraiser = Fundraiser.query.get_or_404(fundraiser_id)  # Retrieve fundraiser
-
-    if request.method == 'POST':
-        message = request.form['message']  # Extract from form data
-        save_contribution(fundraiser_id, message)
-        return redirect(
-            url_for('fundraiser_success', fundraiser_id=fundraiser_id))  # Redirect after saving contribution
-    else:
-        if not fundraiser:
-            return error("Error updating fundraiser", 404)
-        # Render the success page for GET requests
-        return render_template('fundraiser_success.html', fundraiser=fundraiser)
-
-
 from datetime import datetime
 import re  # Import regular expressions for robust parsing
-
-
-def save_contribution(fundraiser_id, message):
-    try:
+@app.route('/fundraiser_success/<int:fundraiser_id>/<string:message>', methods=['GET', 'POST'])
+@login_required  # Ensures the user is logged in
+def save_contribution(fundraiser_id):
+    if request.method == 'POST':
         message = request.form['message']
         print(f"Message: {message}")
 
@@ -217,17 +199,6 @@ def save_contribution(fundraiser_id, message):
                 'message': str(e)
             }
 
-        # Print the new Contribution ID
-        print(f"New Contribution ID: {contribution.contribution_id}")
-        # Print the contribution columns
-        print(f"\nFundraiser ID: {contribution.fundraiser_id}")
-        print(f"Contribution Reference: {contribution.contribution_reference}")
-        print(f"Contributor Name: {contribution.contributor_name}")
-        print(f"Phone Number: {contribution.phone_number}")
-        print(f"Amount: {contribution.amount}")
-        print(f"Contribution Date: {contribution.contribution_date}")
-        print(f"Contribution Time: {contribution.contribution_time}")
-
         return {
             'status': 'success',
             'message': 'Contribution saved successfully!',
@@ -241,16 +212,11 @@ def save_contribution(fundraiser_id, message):
             'contribution_time': contribution_time,
             }
         }
-
-    except Exception as e:
-        return {
-            'status': 'error',
-            'message': str(e)
-        }
-
-
-# End of save_contribution
-
+    else:
+        # handle GET request
+        # Retrieve the fundraiser object
+        fundraiser = Fundraiser.query.filter_by(id=fundraiser_id).first()
+        return render_template('fundraiser_success.html', fundraiser=fundraiser)
 
 if __name__ == '__main__':
     app.run(debug=True)

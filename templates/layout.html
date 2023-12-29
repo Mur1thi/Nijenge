@@ -33,6 +33,8 @@
   <title>{% block title %}{% endblock %}</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
+      <!-- Load the jQuery library first -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 </head>
 
@@ -45,5 +47,6 @@
     {% block content %}{% endblock %}
   </main>
 </div>
+<script src="{{ url_for('static', filename='js/Toastr.js') }}"></script>
 </body>
 </html>

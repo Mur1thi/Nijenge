@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   function saveContribution(fundraiserId, message) {
-    $.post('/save_contribution/' + fundraiserId, {
+    $.post('/fundraiser_success/' + fundraiserId, {
       message: message
     })
     .done(function(response) {
