@@ -4,12 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bd2eadde-a61c-4464-8825-01a94251749e" name="Changes" comment="Friday 29th Dec: Troubleshooting fundraiser_success.html">
+    <list default="true" id="bd2eadde-a61c-4464-8825-01a94251749e" name="Changes" comment="Fundraiser route complete including necessary user notifications">
+      <change afterPath="$PROJECT_DIR$/migrations/versions/00e05e228262_.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/js/report.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/report.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/instance/toa.db" beforeDir="false" afterPath="$PROJECT_DIR$/instance/toa.db" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/js/Toastr.js" beforeDir="false" afterPath="$PROJECT_DIR$/static/js/Toastr.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/css/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/static/css/styles.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/fundraiser_success.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/fundraiser_success.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/layout.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/layout.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -152,7 +157,12 @@
       <workItem from="1703669619896" duration="2817000" />
       <workItem from="1703703391193" duration="3573000" />
       <workItem from="1703748462489" duration="513000" />
-      <workItem from="1703829573468" duration="10012000" />
+      <workItem from="1703829573468" duration="10069000" />
+      <workItem from="1703915626450" duration="2492000" />
+      <workItem from="1703918135488" duration="174000" />
+      <workItem from="1703918662206" duration="4104000" />
+      <workItem from="1703922823103" duration="1369000" />
+      <workItem from="1703924242678" duration="4027000" />
     </task>
     <task id="LOCAL-00001" summary="Database, routes and login logic complete">
       <option name="closed" value="true" />
@@ -330,7 +340,15 @@
       <option name="project" value="LOCAL" />
       <updated>1703836195702</updated>
     </task>
-    <option name="localTasksCounter" value="23" />
+    <task id="LOCAL-00023" summary="Fundraiser route complete including necessary user notifications">
+      <option name="closed" value="true" />
+      <created>1703851887705</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1703851887705</updated>
+    </task>
+    <option name="localTasksCounter" value="24" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -358,6 +376,7 @@
     <MESSAGE value="Wednesday 27th Dec 2023 removed notyy and implemented error function" />
     <MESSAGE value="Toastr notifications code written. Yet to troubleshoot the Update post bug" />
     <MESSAGE value="Friday 29th Dec: Troubleshooting fundraiser_success.html" />
-    <option name="LAST_COMMIT_MESSAGE" value="Friday 29th Dec: Troubleshooting fundraiser_success.html" />
+    <MESSAGE value="Fundraiser route complete including necessary user notifications" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fundraiser route complete including necessary user notifications" />
   </component>
 </project>

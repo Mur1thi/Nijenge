@@ -1,10 +1,11 @@
+import json
+import math
 import os
 from pathlib import Path
 from flask import Flask, g, request, session, redirect, url_for, render_template
 from flask_bootstrap import Bootstrap
 from flask_migrate import Migrate
 from werkzeug.security import generate_password_hash, check_password_hash
-
 from models import User, error, Fundraiser, login_required, has_active_fundraiser, Contribution
 from models import db
 
@@ -31,6 +32,16 @@ app.config['SECRET_KEY'] = secret_key
 
 # Initialize Flask-Migrate
 migrate = Migrate(app, db)
+
+@app.template_filter('tojson_string')
+def tojson_string_filter(value):
+    return json.dumps(value)
+
+@app.template_filter('currency_format')
+def currency_format(value):
+    formatted_value = f"KES {value:,.2f}"  # Format as KES with thousands separator and 2 decimal places
+    return formatted_value
+
 
 
 @app.route('/')
@@ -228,6 +239,57 @@ def save_contribution(fundraiser_id):
         # Retrieve the fundraiser object
         fundraiser = Fundraiser.query.filter_by(user_id=g.user.id).first()
         return render_template('fundraiser_success.html', fundraiser=fundraiser)
+
+@app.route('/report_index')
+@login_required  # login is required for both creating fundraisers and viewing reports
+def report_index():
+    fundraiser_id = has_active_fundraiser()  # has_active_fundraiser is a function to retrieve associated fundraiser ID
+    if fundraiser_id is None:
+        return redirect(url_for('fundraiser'))
+
+    # Get a default page number or retrieve it from a query parameter
+    page_number = request.args.get('page', 1)
+
+    return redirect(url_for('report', fundraiser_id=fundraiser_id, page_number=page_number))
+
+@app.route('/report/<int:fundraiser_id>/page/<int:page_number>')
+@login_required
+def report(fundraiser_id, page_number):
+    try:
+        fundraiser = Fundraiser.query.get_or_404(fundraiser_id)
+        contributions = Contribution.query.filter_by(fundraiser_id=fundraiser_id)
+        # Pagination vars
+        per_page = 10
+        start = (page_number - 1) * per_page
+
+        # Query contributions
+        contributions = Contribution.query.filter_by(fundraiser_id=fundraiser_id)
+
+        # Execute paginated query
+        results = contributions.limit(per_page).offset(start).all()
+
+        # Convert results to dicts
+        contributions_dicts = [contribution.to_dict() for contribution in results] # Convert each result to a dictionary
+        for r in results:
+            contributions_dicts.append(r.to_dict())
+
+        # Calculate total pages
+        total_contributions = contributions.count()
+        total_pages = math.ceil(total_contributions / per_page)
+
+        # Render template
+        return render_template('report.html',
+                               fundraiser=fundraiser,
+                               contributions=contributions_dicts,
+                               total_pages=total_pages,
+                               current_page=page_number)
+    except Exception as e:
+        # Handle errors appropriately, e.g., log the error and return a user-friendly message
+        # Log the error for debugging and troubleshooting
+        app.logger.error(f"Error generating report: {str(e)}")
+        # Return a user-friendly error message or redirect to an error page
+        return error("An error occurred while generating the report. Please try again later.", 500)
+
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -12,7 +12,7 @@
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ms-auto">
         <li class="nav-item"><a class="nav-link" href="/fundraiser">Fundraiser</a></li>
-        <li class="nav-item"><a class="nav-link" href="/report">Reports</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('report_index') }}">Reports</a></li>
           <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
         <li class="nav-item"><a class="nav-link" href="/logout">Logout</a></li>
       </ul>
@@ -47,6 +47,6 @@
     {% block content %}{% endblock %}
   </main>
 </div>
-<script src="{{ url_for('static', filename='js/Toastr.js') }}"></script>
+
 </body>
 </html>

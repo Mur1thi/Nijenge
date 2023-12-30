@@ -1,5 +1,6 @@
 from flask import render_template, session, redirect, url_for, g, request
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.sql import func
 
 db = SQLAlchemy()
 
@@ -66,6 +67,7 @@ def has_active_fundraiser():
         return user_fundraiser is not None
     return False
 
+from datetime import datetime
 
 class Contribution(db.Model):
     __tablename__ = 'contributions'
@@ -78,8 +80,22 @@ class Contribution(db.Model):
     amount = db.Column(db.DECIMAL, nullable=False)
     contribution_date = db.Column(db.Date, nullable=False)
     contribution_time = db.Column(db.Time, nullable=False)
+    # new timestamp column
+    timestamp = db.Column(db.DateTime(timezone=True), server_default=func.now())
 
     fundraiser = db.relationship('Fundraiser', backref='contributions')
+
+    def to_dict(self):
+        return {
+            'contribution_reference': self.contribution_reference,
+            'contributor_name': self.contributor_name,
+            'phone_number': self.phone_number,
+            'amount': self.amount,
+            'contribution_time': self.contribution_time.strftime("%H:%M:%S"),  # Convert time to string
+            'timestamp': self.timestamp.strftime("%Y-%m-%d %H:%M:%S"),  # Convert timestamp to string
+            'contribution_date': self.contribution_date.strftime("%Y-%m-%d"),  # Convert date to string
+        }
+
 
     def __repr__(self):
         return f'<Contribution {self.contribution_id} for Fundraiser {self.fundraiser_id}>'

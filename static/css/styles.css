@@ -94,6 +94,26 @@
   max-width: 400px;
   margin: 0 auto;
 }
+#contributions-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: sans-serif;
+  /* Other styling for borders, colors, etc. */
+}
+
+#contributions-table th,
+#contributions-table td {
+  padding: 10px;
+  text-align: left;
+  border: 1px solid #ddd;
+}
+
+/* Responsiveness for smaller screens */
+@media (max-width: 768px) {
+  #contributions-table {
+    /* Adjust font size, column widths, etc. */
+  }
+}
 
 .content-wrapper {
   padding-top: 56px;
