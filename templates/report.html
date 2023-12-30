@@ -6,7 +6,7 @@
 
 <div class="container">
 
-  <h1>Fundraiser</h1>
+    <h1>Report</h1>
 
   <div class="card">
     <div class="card-body">
@@ -72,6 +72,6 @@
   <pre id="contributions-data" style="display: none;">{{ contributions|tojson }}</pre>  </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="{{ url_for('static', filename='report.js') }}"></script>
+<script src="{{ url_for('static',folder='js', filename='report.js') }}"></script>
 
 {% endblock %}
