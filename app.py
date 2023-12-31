@@ -5,6 +5,7 @@ from pathlib import Path
 from flask import Flask, g, request, session, redirect, url_for, render_template
 from flask_bootstrap import Bootstrap
 from flask_migrate import Migrate
+from werkzeug.debug import console
 from werkzeug.security import generate_password_hash, check_password_hash
 from models import User, error, Fundraiser, login_required, has_active_fundraiser, Contribution
 from models import db
@@ -32,6 +33,7 @@ app.config['SECRET_KEY'] = secret_key
 
 # Initialize Flask-Migrate
 migrate = Migrate(app, db)
+
 
 @app.template_filter('tojson_string')
 def tojson_string_filter(value):
@@ -149,6 +151,7 @@ def create_fundraiser():
             return redirect(url_for('fundraiser_success', fundraiser_id=new_fundraiser.id))  # Redirect to success page
 
         except Exception as e:
+            console.log(str(e))
             return error(str(e), 500)  # Handle any errors
 
     # Render the form for GET requests
