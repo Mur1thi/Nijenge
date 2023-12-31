@@ -6,7 +6,16 @@ db = SQLAlchemy()
 
 from functools import wraps
 
+"""
+Decorator that checks if a user is logged in before executing the decorated function.
 
+Parameters:
+    func (function): The function to be decorated.
+
+Returns:
+    function: The decorated function.
+
+"""
 def login_required(func):
     @wraps(func)
     def decorated_function(*args, **kwargs):
