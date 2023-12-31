@@ -1,4 +1,4 @@
-import jsPDF from 'jspdf';
+import jsPDF from './node_modules/jspdf';
 window.addEventListener('DOMContentLoaded', () => {
   // Access contribution data passed from the template
   const contributionsData = JSON.parse(document.getElementById('contributions-data').textContent);
@@ -44,8 +44,7 @@ window.addEventListener('DOMContentLoaded', () => {
     const downloadPdfButton = document.querySelector('#download-pdf');
     if (downloadPdfButton) {
       downloadPdfButton.addEventListener('click', () => {
-        let html, internal, setFooter, setHeader;
-        ({html, internal, setFooter, setHeader} = new jsPDF());
+        const jsPDf = new jsPDF();
 
         // Add header (ensure fundraiser variable is available here)
         setHeader({
