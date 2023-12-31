@@ -3,7 +3,7 @@
 {% block title %}Fundraiser Report{% endblock %}
 
 {% block content %}
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script><script src="/static/js/report.js"></script>
 <div class="container">
 
     <h1>Report</h1>
@@ -70,8 +70,4 @@
   <button id="download-pdf">Download PDF</button>
 
   <pre id="contributions-data" style="display: none;">{{ contributions|tojson }}</pre>  </div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="{{ url_for('static',folder='js', filename='report.js') }}"></script>
-
 {% endblock %}

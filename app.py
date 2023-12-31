@@ -257,7 +257,7 @@ def report_index():
 def report(fundraiser_id, page_number):
     try:
         fundraiser = Fundraiser.query.get_or_404(fundraiser_id)
-        contributions = Contribution.query.filter_by(fundraiser_id=fundraiser_id)
+
         # Pagination vars
         per_page = 10
         start = (page_number - 1) * per_page
@@ -268,11 +268,9 @@ def report(fundraiser_id, page_number):
         # Execute paginated query
         results = contributions.limit(per_page).offset(start).all()
 
-        # Convert results to dicts
-        contributions_dicts = [contribution.to_dict() for contribution in results] # Convert each result to a dictionary
-        for r in results:
-            contributions_dicts.append(r.to_dict())
-
+        # Convert results to dicts and pass them to template
+        contributions_dicts = [contribution.to_dict() for contribution
+                               in results]
         # Calculate total pages
         total_contributions = contributions.count()
         total_pages = math.ceil(total_contributions / per_page)
