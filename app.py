@@ -8,83 +8,93 @@ from flask_bootstrap import Bootstrap
 from flask_migrate import Migrate
 from werkzeug.debug import console
 from werkzeug.security import generate_password_hash, check_password_hash
-from models import User, error, Fundraiser, login_required, has_active_fundraiser, Contribution
+from models import (
+    User,
+    error,
+    Fundraiser,
+    login_required,
+    has_active_fundraiser,
+    Contribution,
+)
 from models import db
 
 app = Flask(__name__)
 Bootstrap(app)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///Toa.db"
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///Toa.db"
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 # Initialize Flask-SQLAlchemy
 db.init_app(app)
 
 # Get the path to the virtual environment configuration file
-venv_cfg_path = Path(os.environ.get('VIRTUAL_ENV')) / 'pyvenv.cfg'
+venv_cfg_path = Path(os.environ.get("VIRTUAL_ENV")) / "pyvenv.cfg"
 
 # Generate a random secret key
 secret_key = secrets.token_urlsafe(16)
 
-app.config['SECRET_KEY'] = secret_key
+app.config["SECRET_KEY"] = secret_key
 
 # Initialize Flask-Migrate
 migrate = Migrate(app, db)
 
 
-@app.template_filter('tojson_string')
+@app.template_filter("tojson_string")
 def tojson_string_filter(value):
     return json.dumps(value)
 
-@app.template_filter('currency_format')
+
+@app.template_filter("currency_format")
 def currency_format(value):
     formatted_value = f"KES {value:,.2f}"  # Format as KES with thousands separator and 2 decimal places
     return formatted_value
 
 
-@app.route('/')
+@app.route("/")
 def index():
-    return render_template('index.html')
+    return render_template("index.html")
 
 
-@app.route('/logout')
+@app.route("/logout")
 def logout():
     """Logs the user out by removing the user ID from the session."""
 
     # Remove the user ID from the session
-    session.pop('user_id', None)  # Use pop() to avoid errors if key doesn't exist
+    session.pop("user_id", None)  # Use pop() to avoid errors if key doesn't exist
 
     # Redirect to the login page or another appropriate route
-    return redirect(url_for('index'))
+    return redirect(url_for("index"))
 
 
-@app.route('/login', methods=['GET', 'POST'])
+@app.route("/login", methods=["GET", "POST"])
 def login():
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
+    if request.method == "POST":
+        username = request.form["username"]
+        password = request.form["password"]
 
         try:
             user = User.query.filter_by(username=username).first()
 
             if user and check_password_hash(user.password, password):
-                session['user_id'] = user.id
+                session["user_id"] = user.id
                 g.user = user  # Assign user to g for access in other routes
-                return redirect(url_for('index'))  # 'index' is the main page
+                return redirect(url_for("index"))  # 'index' is the main page
             else:
-                return error("Invalid username or password", 400)  # Provide informative error message
+                return error(
+                    "Invalid username or password", 400
+                )  # Provide informative error message
         except Exception as e:
             return error(str(e), 500)  # Handling general errors
 
-    return render_template('login.html')  # Render login form for GET requests
+    return render_template("login.html")  # Render login form for GET requests
 
 
-@app.route('/register', methods=['GET', 'POST'])
+@app.route("/register", methods=["GET", "POST"])
 def register():
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        confirm_password = request.form['confirm_password']
+    if request.method == "POST":
+        username = request.form["username"]
+        password = request.form["password"]
+        confirm_password = request.form["confirm_password"]
 
         # Password validation
         if not password or not confirm_password:
@@ -100,30 +110,34 @@ def register():
         db.session.add(new_user)
         db.session.commit()
 
-        return redirect(url_for('login'))
+        return redirect(url_for("login"))
 
-    return render_template('register.html')
+    return render_template("register.html")
 
 
-@app.route('/fundraiser', methods=['GET', 'POST'])
+@app.route("/fundraiser", methods=["GET", "POST"])
 @login_required  # Decorator to check for login status
 def fundraiser():
     if has_active_fundraiser():
         # Redirect to fundraiser_success page if user has an active fundraiser
         user_fundraiser = Fundraiser.query.filter_by(user_id=g.user.id).first()
         print("Fundraiser ID:", user_fundraiser.id)  # Print the fundraiser ID
-        return render_template('fundraiser_success.html', fundraiser_id=user_fundraiser.id, fundraiser=user_fundraiser)
+        return render_template(
+            "fundraiser_success.html",
+            fundraiser_id=user_fundraiser.id,
+            fundraiser=user_fundraiser,
+        )
     else:
         return create_fundraiser()
 
 
 def create_fundraiser():
-    if request.method == 'POST':
-        name = request.form['name']
-        description = request.form['description']
-        end_date = request.form['end_date']  # Extract from form data
+    if request.method == "POST":
+        name = request.form["name"]
+        description = request.form["description"]
+        end_date = request.form["end_date"]  # Extract from form data
         end_date = datetime.strptime(end_date, "%Y-%m-%dT%H:%M")  # Convert to datetime
-        target_funds = request.form['target_funds']
+        target_funds = request.form["target_funds"]
 
         try:
             # Check if user already has an active fundraiser
@@ -131,7 +145,8 @@ def create_fundraiser():
             if user_fundraiser:
                 return error(
                     "You already have an active fundraiser. Please complete or cancel it before creating a new one.",
-                    400)
+                    400,
+                )
 
             # Create the new fundraiser
             new_fundraiser = Fundraiser(
@@ -139,12 +154,14 @@ def create_fundraiser():
                 name=name,
                 description=description,
                 end_date=end_date,  # Use the formatted string
-                target_funds=target_funds
+                target_funds=target_funds,
             )
             db.session.add(new_fundraiser)
             db.session.commit()
 
-            return redirect(url_for('fundraiser_success', fundraiser_id=new_fundraiser.id))  # Redirect to success page
+            return redirect(
+                url_for("fundraiser_success", fundraiser_id=new_fundraiser.id)
+            )  # Redirect to success page
 
         except Exception as e:
             console.log(str(e))
@@ -153,40 +170,47 @@ def create_fundraiser():
     # Render the form for GET requests
     # Retrieve the fundraiser object
     fundraiser = Fundraiser.query.filter_by(user_id=g.user.id).first()
-    return render_template('fundraiser.html', fundraiser=fundraiser)
+    return render_template("fundraiser.html", fundraiser=fundraiser)
+
 
 from datetime import datetime
 import re  # Import regular expressions for robust parsing
-@app.route('/fundraiser_success/<int:fundraiser_id>', methods=['GET', 'POST'])
-@login_required # Ensures the user is logged in
+
+
+@app.route("/fundraiser_success/<int:fundraiser_id>", methods=["GET", "POST"])
+@login_required  # Ensures the user is logged in
 def save_contribution(fundraiser_id):
-    if request.method == 'POST':
-        message = request.form['message']
+    if request.method == "POST":
+        message = request.form["message"]
         print(f"Message: {message}")
 
-        contribution_reference = re.search(r'\b[A-Z0-9]{10}\b', message)
+        contribution_reference = re.search(r"\b[A-Z0-9]{10}\b", message)
         print(f"Contribution Reference Match: {contribution_reference}")
         contribution_reference = contribution_reference.group()
 
-        amount = re.search(r'Ksh([\d,]+)\.', message)
+        amount = re.search(r"Ksh([\d,]+)\.", message)
         print(f"Amount Match: {amount}")
         amount = amount.group(1)
 
-        contributor_name = re.search(r'from ([A-Z\s]+) \d', message)
+        contributor_name = re.search(r"from ([A-Z\s]+) \d", message)
         print(f"Contributor Name Match: {contributor_name}")
         contributor_name = contributor_name.group(1).strip()
 
-        phone_number = re.search(r'(\d+) on', message)
+        phone_number = re.search(r"(\d+) on", message)
         print(f"Phone Number Match: {phone_number}")
         phone_number = phone_number.group(1)
 
-        contribution_date = re.search(r'on (\d{1,2}/\d{1,2}/\d{2}) at', message)
+        contribution_date = re.search(r"on (\d{1,2}/\d{1,2}/\d{2}) at", message)
         print(f"Contribution Date Match: {contribution_date}")
-        contribution_date = datetime.strptime(contribution_date.group(1), '%d/%m/%y').date()
+        contribution_date = datetime.strptime(
+            contribution_date.group(1), "%d/%m/%y"
+        ).date()
 
-        contribution_time = re.search(r'at (\d{1,2}:\d{2} (?:AM|PM))', message)
+        contribution_time = re.search(r"at (\d{1,2}:\d{2} (?:AM|PM))", message)
         print(f"Contribution Time Match: {contribution_time}")
-        contribution_time = str(datetime.strptime(contribution_time.group(1), '%I:%M %p').time())
+        contribution_time = str(
+            datetime.strptime(contribution_time.group(1), "%I:%M %p").time()
+        )
 
         # Create a new Contribution object
         contribution = Contribution(
@@ -194,9 +218,9 @@ def save_contribution(fundraiser_id):
             contribution_reference=contribution_reference,
             contributor_name=contributor_name,
             phone_number=phone_number,
-            amount=amount.replace(',', ''),
+            amount=amount.replace(",", ""),
             contribution_date=contribution_date,
-            contribution_time=datetime.strptime(contribution_time, '%H:%M:%S').time()
+            contribution_time=datetime.strptime(contribution_time, "%H:%M:%S").time(),
         )
         print(f"Fundraiser ID: {fundraiser_id}")
         print(f"Contribution Date: {contribution.contribution_date}")
@@ -212,23 +236,20 @@ def save_contribution(fundraiser_id):
         try:
             db.session.commit()
         except Exception as e:
-            return {
-                'status': 'error',
-                'message': str(e)
-            }
+            return {"status": "error", "message": str(e)}
 
         return {
-            'status': 'success',
-            'message': 'Contribution saved successfully!',
-            'data': {
-            'fundraiser_id': fundraiser_id,
-            'contribution_reference': contribution_reference,
-            'amount': amount,
-            'contributor_name': contributor_name,
-            'phone_number': phone_number,
-            'contribution_date': contribution_date,
-            'contribution_time': contribution_time,
-            }
+            "status": "success",
+            "message": "Contribution saved successfully!",
+            "data": {
+                "fundraiser_id": fundraiser_id,
+                "contribution_reference": contribution_reference,
+                "amount": amount,
+                "contributor_name": contributor_name,
+                "phone_number": phone_number,
+                "contribution_date": contribution_date,
+                "contribution_time": contribution_time,
+            },
         }
         # Render the form for a fresh Update request
         # Retrieve the fundraiser object
@@ -237,21 +258,27 @@ def save_contribution(fundraiser_id):
         # handle GET request...
         # Retrieve the fundraiser object
         fundraiser = Fundraiser.query.filter_by(user_id=g.user.id).first()
-        return render_template('fundraiser_success.html', fundraiser=fundraiser)
+        return render_template("fundraiser_success.html", fundraiser=fundraiser)
 
-@app.route('/report_index')
+
+@app.route("/report_index")
 @login_required  # login is required for both creating fundraisers and viewing reports
 def report_index():
-    fundraiser_id = has_active_fundraiser()  # has_active_fundraiser is a function to retrieve associated fundraiser ID
+    fundraiser_id = (
+        has_active_fundraiser()
+    )  # has_active_fundraiser is a function to retrieve associated fundraiser ID
     if fundraiser_id is None:
-        return redirect(url_for('fundraiser'))
+        return redirect(url_for("fundraiser"))
 
     # Get a default page number or retrieve it from a query parameter
-    page_number = request.args.get('page', 1)
+    page_number = request.args.get("page", 1)
 
-    return redirect(url_for('report', fundraiser_id=fundraiser_id, page_number=page_number))
+    return redirect(
+        url_for("report", fundraiser_id=fundraiser_id, page_number=page_number)
+    )
 
-@app.route('/report/<int:fundraiser_id>/page/<int:page_number>')
+
+@app.route("/report/<int:fundraiser_id>/page/<int:page_number>")
 @login_required
 def report(fundraiser_id, page_number):
     try:
@@ -268,25 +295,29 @@ def report(fundraiser_id, page_number):
         results = contributions.limit(per_page).offset(start).all()
 
         # Convert results to dicts and pass them to template
-        contributions_dicts = [contribution.to_dict() for contribution
-                               in results]
+        contributions_dicts = [contribution.to_dict() for contribution in results]
         # Calculate total pages
         total_contributions = contributions.count()
         total_pages = math.ceil(total_contributions / per_page)
 
         # Render template
-        return render_template('report.html',
-                               fundraiser=fundraiser,
-                               contributions=contributions_dicts,
-                               total_pages=total_pages,
-                               current_page=page_number)
+        return render_template(
+            "report.html",
+            fundraiser=fundraiser,
+            contributions=contributions_dicts,
+            total_pages=total_pages,
+            current_page=page_number,
+        )
     except Exception as e:
         # Handle errors appropriately, e.g., log the error and return a user-friendly message
         # Log the error for debugging and troubleshooting
         app.logger.error(f"Error generating report: {str(e)}")
         # Return a user-friendly error message or redirect to an error page
-        return error("An error occurred while generating the report. Please try again later.", 500)
+        return error(
+            "An error occurred while generating the report. Please try again later.",
+            500,
+        )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.run(debug=True)
