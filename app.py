@@ -28,18 +28,22 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db.init_app(app)
 
 # Get the path to the virtual environment configuration file
-venv_cfg_path = Path(os.environ.get("VIRTUAL_ENV")) / "pyvenv.cfg"
+venv_cfg_path = Path(os.environ.get('VIRTUAL_ENV')) / 'pyvenv.cfg'
 
-# Generate a random secret key
-secret_key = secrets.token_urlsafe(16)
+# Read the key from the configuration file
+with open(venv_cfg_path, 'r') as f:
+    for line in f:
+        if line.startswith('export SECRET_KEY='):
+            secret_key = line.split('=')[1].strip()
+            break
 
-app.config["SECRET_KEY"] = secret_key
+app.config['SECRET_KEY'] = secret_key
 
 # Initialize Flask-Migrate
 migrate = Migrate(app, db)
 
 
-@app.template_filter("tojson_string")
+@app.template_filter('tojson_string')
 def tojson_string_filter(value):
     return json.dumps(value)
 
