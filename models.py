@@ -69,6 +69,9 @@ class Fundraiser(db.Model):
 
 
 # Fundraiser checker function
+"""This code snippet defines a function has_active_fundraiser that checks if the current user has an active fundraiser 
+by querying the database for a fundraiser associated with the user ID stored in the session. If a fundraiser is found, 
+it returns True, otherwise it returns False."""
 def has_active_fundraiser():
     """Checks if the current user has an active fundraiser."""
     if 'user_id' in session:  # Ensure user is logged in

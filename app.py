@@ -2,6 +2,7 @@ import json
 import math
 import os
 from pathlib import Path
+import secrets
 from flask import Flask, g, request, session, redirect, url_for, render_template
 from flask_bootstrap import Bootstrap
 from flask_migrate import Migrate
@@ -22,12 +23,8 @@ db.init_app(app)
 # Get the path to the virtual environment configuration file
 venv_cfg_path = Path(os.environ.get('VIRTUAL_ENV')) / 'pyvenv.cfg'
 
-# Read the key from the configuration file
-with open(venv_cfg_path, 'r') as f:
-    for line in f:
-        if line.startswith('export SECRET_KEY='):
-            secret_key = line.split('=')[1].strip()
-            break
+# Generate a random secret key
+secret_key = secrets.token_urlsafe(16)
 
 app.config['SECRET_KEY'] = secret_key
 
@@ -43,7 +40,6 @@ def tojson_string_filter(value):
 def currency_format(value):
     formatted_value = f"KES {value:,.2f}"  # Format as KES with thousands separator and 2 decimal places
     return formatted_value
-
 
 
 @app.route('/')
