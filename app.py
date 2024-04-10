@@ -30,14 +30,7 @@ db.init_app(app)
 # Get the path to the virtual environment configuration file
 venv_cfg_path = Path(os.environ.get('VIRTUAL_ENV')) / 'pyvenv.cfg'
 
-# Read the key from the configuration file
-with open(venv_cfg_path, 'r') as f:
-    for line in f:
-        if line.startswith('export SECRET_KEY='):
-            secret_key = line.split('=')[1].strip()
-            break
-
-app.config['SECRET_KEY'] = secret_key
+app.config["SECRET_KEY"] = secrets.token_urlsafe(16)
 
 # Initialize Flask-Migrate
 migrate = Migrate(app, db)
