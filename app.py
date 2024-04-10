@@ -261,9 +261,7 @@ def save_contribution(fundraiser_id):
 @app.route("/report_index")
 @login_required  # login is required for both creating fundraisers and viewing reports
 def report_index():
-    fundraiser_id = (
-        has_active_fundraiser()
-    )  # has_active_fundraiser is a function to retrieve associated fundraiser ID
+    fundraiser_id = has_active_fundraiser()  # Get the fundraiser ID if it exists
     if fundraiser_id is None:
         return redirect(url_for("fundraiser"))
 
@@ -280,8 +278,8 @@ def report_index():
 def report(fundraiser_id, page_number):
     try:
         if fundraiser_id == 0:
-            return (
-                create_fundraiser()
+            return redirect(
+                url_for("fundraiser")
             )  # Call create_fundraiser() when fundraiser_id is 0
 
         fundraiser = Fundraiser.query.get_or_404(fundraiser_id)

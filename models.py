@@ -73,11 +73,12 @@ class Fundraiser(db.Model):
 by querying the database for a fundraiser associated with the user ID stored in the session. If a fundraiser is found, 
 it returns True, otherwise it returns False."""
 def has_active_fundraiser():
-    """Checks if the current user has an active fundraiser."""
-    if 'user_id' in session:  # Ensure user is logged in
-        user_fundraiser = Fundraiser.query.filter_by(user_id=session['user_id']).first()
-        return user_fundraiser is not None
-    return False
+    """Checks if the current user has an active fundraiser and returns the fundraiser ID."""
+    if "user_id" in session:  # Ensure user is logged in
+        user_fundraiser = Fundraiser.query.filter_by(user_id=session["user_id"]).first()
+        if user_fundraiser:
+            return user_fundraiser.id
+    return None
 
 from datetime import datetime
 
