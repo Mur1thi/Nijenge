@@ -279,6 +279,11 @@ def report_index():
 @login_required
 def report(fundraiser_id, page_number):
     try:
+        if fundraiser_id == 0:
+            return (
+                create_fundraiser()
+            )  # Call create_fundraiser() when fundraiser_id is 0
+
         fundraiser = Fundraiser.query.get_or_404(fundraiser_id)
 
         # Pagination vars
