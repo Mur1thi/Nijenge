@@ -10,8 +10,13 @@
                 Welcome to Toa
             </h1>
             <div class="d-flex justify-content-start">
-            <a class="btn btn-lg btn-light me-2" href="/register">Register</a>
-            <a class="btn btn-lg btn-light" href="/login">Login</a>
+                {% if session.user_id %}
+                <a class="btn btn-lg btn-light me-2" href="/fundraiser">Fundraiser</a>
+                <a class="btn btn-lg btn-light" href="{{ url_for('report_index') }}">Reports</a>
+                {% else %}
+                <a class="btn btn-lg btn-light me-2" href="/register">Register</a>
+                <a class="btn btn-lg btn-light" href="/login">Login</a>
+                {% endif %}
             </div>
         </div>
     </header>
