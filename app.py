@@ -1,11 +1,24 @@
 import json
 import math
 import os
+import smtplib
 from pathlib import Path
 import secrets
-from flask import Flask, g, request, session, redirect, url_for, render_template
+from dotenv import load_dotenv
+from email.message import EmailMessage
+from flask import (
+    Flask,
+    g,
+    request,
+    session,
+    redirect,
+    url_for,
+    render_template,
+    jsonify,
+)
 from flask_bootstrap import Bootstrap
 from flask_migrate import Migrate
+from flask_mail import Mail, Message
 from werkzeug.debug import console
 from werkzeug.security import generate_password_hash, check_password_hash
 from models import (
@@ -17,6 +30,9 @@ from models import (
     Contribution,
 )
 from models import db
+
+# Load environment variables from .env file
+load_dotenv("siri.env")
 
 app = Flask(__name__)
 Bootstrap(app)
@@ -52,12 +68,52 @@ def index():
     return render_template("index.html")
 
 
+@app.route("/contact", methods=["POST"])
+def contact():
+    """Now you can process the form data, validate it, and send the email"""
+    name = request.form["name"]
+    email = request.form["email"]
+    message = request.form["message"]
+
+    # Validate form data (you can add more validation as needed)
+    if not name or not email or not message:
+        return jsonify({"status": "error", "message": "Please fill in all fields"})
+
+    # Send the email
+    try:
+        subject = "Contact Form Submission"
+        recipient = "elp1262017@gmail.com"  # Your recipient email
+        body = f"Name: {name}\nEmail: {email}\nMessage: {message}"
+
+        send_mail(subject, recipient, body)  # Call the send_mail function
+
+    except Exception as e:
+        return jsonify({"status": "error", "message": f"An error occurred: {str(e)}"})
+
+    # Email sent successfully, return success response
+    return jsonify({"status": "success", "message": "Email sent successfully!"})
+
+
+# Create a secure SMTP connection for sending emails
+def send_mail(subject, recipient, body):
+    msg = EmailMessage()  # More modern message handling
+    msg["Subject"] = subject
+    msg["From"] = os.getenv("MAIL_USERNAME")
+    msg["To"] = recipient
+    msg.set_content(body)
+
+    with smtplib.SMTP_SSL("smtp.mail.yahoo.com", 465) as smtp:
+        smtp.login(os.getenv("MAIL_USERNAME"), os.getenv("MAIL_PASSWORD"))
+        smtp.send_message(msg)
+
+
 @app.route("/logout")
 def logout():
-    """Logs the user out by removing the user ID from the session."""
+    """Logs the user out by removing the user ID and name from the session."""
 
-    # Remove the user ID from the session
+    # Remove the user ID and name from the session
     session.pop("user_id", None)  # Use pop() to avoid errors if key doesn't exist
+    session.pop("name", None)  # Remove the name from the session
 
     # Redirect to the login page or another appropriate route
     return redirect(url_for("index"))
@@ -74,6 +130,9 @@ def login():
 
             if user and check_password_hash(user.password, password):
                 session["user_id"] = user.id
+                session["username"] = user.username  # Store the username in the session
+                name = user.username.split("@")[0]  # Extract the name before the '@' sign
+                session["name"] = name  # Store the name in the session
                 g.user = user  # Assign user to g for access in other routes
                 return redirect(url_for("index"))  # 'index' is the main page
             else:
