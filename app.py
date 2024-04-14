@@ -70,12 +70,11 @@ def index():
 
 @app.route("/contact", methods=["POST"])
 def contact():
-    """Now you can process the form data, validate it, and send the email"""
-    name = request.form["name"]
-    email = request.form["email"]
-    message = request.form["message"]
+    print(request.form)  # Print the entire form data
+    name = request.form.get("name")  # Use .get() instead of direct access
+    email = request.form.get("email")
+    message = request.form.get("message")
 
-    # Validate form data (you can add more validation as needed)
     if not name or not email or not message:
         return jsonify({"status": "error", "message": "Please fill in all fields"})
 
@@ -87,11 +86,12 @@ def contact():
 
         send_mail(subject, recipient, body)  # Call the send_mail function
 
-    except Exception as e:
-        return jsonify({"status": "error", "message": f"An error occurred: {str(e)}"})
+        # Email sent successfully, return success response
+        return jsonify({"status": "success", "message": "Email sent successfully!"})
 
-    # Email sent successfully, return success response
-    return jsonify({"status": "success", "message": "Email sent successfully!"})
+    except Exception as e:
+        # Return error response with Toastr notification
+        return jsonify({"status": "error", "message": f"An error occurred: {str(e)}"})
 
 
 # Create a secure SMTP connection for sending emails
