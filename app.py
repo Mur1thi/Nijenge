@@ -70,13 +70,22 @@ def index():
 
 @app.route("/contact", methods=["POST"])
 def contact():
-    print(request.form)  # Print the entire form data
-    name = request.form.get("name")  # Use .get() instead of direct access
+    print("From app.py", request.form)  # Print the entire form data
+
+    name = request.form.get("name")
     email = request.form.get("email")
     message = request.form.get("message")
 
-    if not name or not email or not message:
-        return jsonify({"status": "error", "message": "Please fill in all fields"})
+    errors = []
+    if not name:
+        errors.append("Please fill in the name field")
+    if not email:
+        errors.append("Please fill in the email field")
+    if not message:
+        errors.append("Please fill in the message field")
+
+    if errors:
+        return jsonify({"status": "error", "message": "\n".join(errors)})
 
     # Send the email
     try:

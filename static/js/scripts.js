@@ -33,49 +33,45 @@ window.addEventListener('DOMContentLoaded', event => {
 
 });
 
-// Inside your DOMContentLoaded event listener:
-function scrollToSection(sectionId) {
-    const section = document.getElementById(sectionId);
-    if (section) {
-        section.scrollIntoView({ behavior: 'smooth' });
-    }
-}
+document.addEventListener('DOMContentLoaded', function() {
+    var contactForm = document.getElementById('contactForm');
 
-// If the hash exists when the page loads, scroll 
-if (window.location.hash) {
-    const hash = window.location.hash.substring(1); // Remove the '#' symbol
-    scrollToSection(hash); 
-}
-
-
-
-$(document).ready(function() {
-    $('#contactForm').on('submit', function(e) {
+    contactForm.addEventListener('submit', function(e) {
         e.preventDefault();
 
-        var formData = $(this).serialize();
-        console.log(formData); // Log the form data
+        var form = e.target;
+        var formData = new FormData(form);
+        console.log('Form data:', formData);
 
-        $.ajax({
-            type: 'POST',
-            url: '/contact',
-            data: formData,
-            /**
-             * A description of the entire function.
-             *
-             * @param {type} response - description of parameter
-             * @return {type} description of return value
-             */
-            success: function(response) {
-                if (response.status === 'success') {
-                    toastr.success(response.message);
-                } else {
-                    toastr.error(response.message);
-                }
-            },
-            error: function(xhr, status, error) {
-                toastr.error('An error occurred during form submission');
+        // Show a loading spinner or animation
+        var loadingSpinner = document.createElement('div');
+        loadingSpinner.classList.add('loading-spinner');
+        loadingSpinner.innerHTML = '<div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div><span>Sending email...</span>';
+        form.appendChild(loadingSpinner);
+
+        fetch('/contact', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('AJAX Success:', data);
+            if (data.status === 'success') {
+                toastr.success(data.message);
+                form.reset(); // Clear the form fields
+                loadingSpinner.remove(); // Remove the loading spinner
+            } else {
+                var errors = data.message.split('\n');
+                errors.forEach(function(error) {
+                    toastr.error(error);
+                });
+                loadingSpinner.remove(); // Remove the loading spinner
             }
-        }); 
+        })
+        .catch(error => {
+            console.log('AJAX Error:', error);
+            toastr.error('An error occurred during form submission');
+            loadingSpinner.remove(); // Remove the loading spinner
+        });
     });
 });
