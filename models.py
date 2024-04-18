@@ -67,6 +67,19 @@ class Fundraiser(db.Model):
     def __repr__(self):
         return f'<Fundraiser {self.name}>'
 
+    @property
+    def funds_raised(self):
+        """
+        Calculates the total amount of funds raised for the fundraiser associated with the current instance.
+        Returns the total amount raised as an integer. If no funds are raised, returns 0.
+        """
+        total = (
+            db.session.query(func.sum(Contribution.amount))
+            .filter_by(fundraiser_id=self.id)
+            .scalar()
+        )
+        return total or 0
+
 
 # Fundraiser checker function
 """This code snippet defines a function has_active_fundraiser that checks if the current user has an active fundraiser 

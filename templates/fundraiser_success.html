@@ -14,8 +14,8 @@
       <p class="card-text">{{ fundraiser.description }}</p>
       <p class="text-muted">
         End Date: {{ fundraiser.end_date.strftime("%B %d, %Y") }}<br>
-        Target Funds: {{ fundraiser.target_funds }}<br>
-        Funds Raised: {{ fundraiser.funds_raised }}
+        Target Funds: {{ fundraiser.target_funds | currency_format }}<br>
+        Funds Raised: {{ fundraiser.funds_raised | currency_format }}
       </p>
     </div>
   </div>
