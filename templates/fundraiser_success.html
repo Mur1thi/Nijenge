@@ -3,6 +3,7 @@
 {% block title %}Fundraiser Created{% endblock %}
 
 {% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 
 <div class="container">
 
@@ -15,11 +16,10 @@
       <p class="text-muted">
         End Date: {{ fundraiser.end_date.strftime("%B %d, %Y") }}<br>
         Target Funds: {{ fundraiser.target_funds | currency_format }}<br>
-        Funds Raised: {{ fundraiser.funds_raised | currency_format }}
+        Funds Raised: <span id="funds-raised">{{ fundraiser.funds_raised | currency_format }}</span>
       </p>
     </div>
   </div>
-    <script src="{{ url_for('static', filename='js/Toastr.js') }}"></script>
   <h2>Update Message</h2>
 
   <form method="POST" action="/fundraiser_success/{{ fundraiser.id }}">
@@ -35,5 +35,7 @@
   </form>
 
 </div>
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<script src="{{ url_for('static', filename='js/Toastr.js') }}"></script>
 {% endblock %}

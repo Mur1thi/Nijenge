@@ -75,3 +75,40 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+
+    $(document).ready(function() {
+    $('#update-button').click(function(event) {
+        event.preventDefault(); // Prevent the form from submitting normally
+
+        var message = $('#message').val();
+        var fundraiserId = $('#fundraiserId').val();
+
+        $.ajax({
+            type: 'POST',
+            url: '/fundraiser_success/' + fundraiserId,
+            data: {
+                message: message
+            },
+            success: function(response) {
+                if (response.status === 'success') {
+                    toastr.success(response.message);
+                    // Update Funds Raised
+                    $('#funds-raised').text(
+                        response.data.funds_raised.toLocaleString('en-US', { 
+                            style: 'currency', currency: 'KES' 
+                        })
+                    ); 
+                    // Clear the message input field
+                    $('#message').val('');
+                    // Refresh the page
+                    window.location.reload();
+                } else {
+                    toastr.error(response.message);
+                }
+            },
+            error: function(xhr, status, error) {
+                toastr.error('An error occurred during form submission');
+            }
+        });
+    });
+});

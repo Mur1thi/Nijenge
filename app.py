@@ -301,21 +301,29 @@ def save_contribution(fundraiser_id):
         try:
             db.session.commit()
         except Exception as e:
-            return {"status": "error", "message": str(e)}
+            return jsonify({"status": "error", "message": str(e)})
 
-        return {
-            "status": "success",
-            "message": "Contribution saved successfully!",
-            "data": {
-                "fundraiser_id": fundraiser_id,
-                "contribution_reference": contribution_reference,
-                "amount": amount,
-                "contributor_name": contributor_name,
-                "phone_number": phone_number,
-                "contribution_date": contribution_date,
-                "contribution_time": contribution_time,
-            },
-        }
+        # Get the updated fundraiser object with the new funds_raised value
+        fundraiser = Fundraiser.query.get_or_404(fundraiser_id)
+
+        print(f"Fundraiser Funds Raised: {fundraiser.funds_raised}") # Print the updated funds_raised value
+
+        return jsonify(
+            {
+                "status": "success",
+                "message": "Contribution saved successfully!",
+                "data": {
+                    "funds_raised": fundraiser.funds_raised,
+                    "fundraiser_id": fundraiser_id,
+                    "contribution_reference": contribution_reference,
+                    "amount": amount,
+                    "contributor_name": contributor_name,
+                    "phone_number": phone_number,
+                    "contribution_date": contribution_date,
+                    "contribution_time": contribution_time,
+                },
+            }
+        )
         # Render the form for a fresh Update request
         # Retrieve the fundraiser object
 
@@ -354,19 +362,28 @@ def report(fundraiser_id, page_number):
 
         # Pagination vars
         per_page = 10
-        start = (page_number - 1) * per_page
+
+        start = (page_number - 1) * per_page  # Calculate start index
 
         # Query contributions
         contributions = Contribution.query.filter_by(fundraiser_id=fundraiser_id)
+
+        # Get the total number of contributions
+        total_contributions = contributions.count()
+
+        # Calculate total pages
+        total_pages = math.ceil(total_contributions / per_page)
+
+        # Handle out of range page_number
+        if start >= total_contributions:
+            # Return an error message or redirect to the first page
+            return "Page number out of range", 404
 
         # Execute paginated query
         results = contributions.limit(per_page).offset(start).all()
 
         # Convert results to dicts and pass them to template
         contributions_dicts = [contribution.to_dict() for contribution in results]
-        # Calculate total pages
-        total_contributions = contributions.count()
-        total_pages = math.ceil(total_contributions / per_page)
 
         # Render template
         return render_template(
