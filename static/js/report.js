@@ -1,14 +1,22 @@
-import jsPDF from './node_modules/jspdf';
-
 window.addEventListener('DOMContentLoaded', () => {
   // Inside the event listener for your pagination buttons (previous/next)
-  const page = // Get the page number from the button or link clicked
+  let page = 1; // Get the page number from the button or link clicked
+  
   fetch(`/report/${fundraiserId}/page/${page}`)
     .then(response => response.json())
     .then(contributionsData => {
       updateContributionsTable(contributionsData);
     })
     .catch(error => console.error("Error fetching data:", error));
+
+    function fetchContributionsData(page) {
+      fetch(`/report/${fundraiserId}/page/${page}`)
+        .then(response => response.json())
+        .then(contributionsData => {
+          updateContributionsTable(contributionsData);
+        })
+        .catch(error => console.error("Error fetching data:", error));
+    }
 
   // Implement PDF download functionality
   try {

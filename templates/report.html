@@ -4,6 +4,7 @@
 
 {% block content %}
     <script src="/static/js/report.js" type="module"></script>
+    <script>const fundraiserId = "{{ fundraiser.id }}"</script>
 <div class="container">
 
     <h1>Report</h1>
@@ -51,16 +52,18 @@
       {% if contributions.has_prev %}
       <li class="page-item">
         <a class="page-link"
-          href="{{ url_for('report', fundraiser_id=fundraiser.id, page_number=contributions.prev_num) }}">Previous</a>
+          href="{{ url_for('report', fundraiser_id=fundraiser.id, page_number=contributions.prev_num) }}"
+          data-page-number="{{ contributions.prev_num }}">Previous</a>
       </li>
       {% endif %}
   
       {% for page in range(1, total_pages + 1) %}
       {% if page == current_page %}
-      <li class="active"><a href="#">{{ page }}</a></li>
+      <li class="active"><a href="#" data-page-number="{{ page }}">{{ page }}</a></li>
       {% else %}
       <li>
-        <a href="{{ url_for('report', fundraiser_id=fundraiser.id, page_number=page) }}">{{ page }}</a>
+        <a href="{{ url_for('report', fundraiser_id=fundraiser.id, page_number=page) }}" data-page-number="{{ page }}">{{
+          page }}</a>
       </li>
       {% endif %}
       {% endfor %}
@@ -68,7 +71,8 @@
       {% if contributions.has_next %}
       <li class="page-item">
         <a class="page-link"
-          href="{{ url_for('report', fundraiser_id=fundraiser.id, page_number=contributions.next_num) }}">Next</a>
+          href="{{ url_for('report', fundraiser_id=fundraiser.id, page_number=contributions.next_num) }}"
+          data-page-number="{{ contributions.next_num }}">Next</a>
       </li>
       {% endif %}
     </ul>
