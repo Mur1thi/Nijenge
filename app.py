@@ -2,6 +2,7 @@ import json
 import math
 import os
 import smtplib
+import flask_mail
 from pathlib import Path
 import secrets
 from dotenv import load_dotenv
@@ -18,7 +19,6 @@ from flask import (
 )
 from flask_bootstrap import Bootstrap
 from flask_migrate import Migrate
-from flask_mail import Mail, Message
 from werkzeug.debug import console
 from werkzeug.security import generate_password_hash, check_password_hash
 from models import (
