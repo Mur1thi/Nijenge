@@ -1,10 +1,10 @@
 import json
 import math
 import os
-import smtplib
-import flask_mail
-from pathlib import Path
 import secrets
+from pathlib import Path
+import smtplib
+import dotenv
 from dotenv import load_dotenv
 from email.message import EmailMessage
 from flask import (
