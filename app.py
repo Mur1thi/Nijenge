@@ -44,7 +44,11 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db.init_app(app)
 
 # Get the path to the virtual environment configuration file
-venv_cfg_path = Path(os.environ.get('VIRTUAL_ENV')) / 'pyvenv.cfg'
+venv_path = os.environ.get("VIRTUAL_ENV")
+venv_cfg_path = None
+
+if venv_path is not None:
+    venv_cfg_path = Path(venv_path) / "pyvenv.cfg"
 
 app.config["SECRET_KEY"] = secrets.token_urlsafe(16)
 
@@ -89,8 +93,8 @@ def contact():
 
     # Send the email
     try:
-        subject = "Contact Form Submission"
-        recipient = "elp1262017@gmail.com"  # Your recipient email
+        subject = os.environ.get("SUBJECT")
+        recipient = os.environ.get("RECIPIENT")
         body = f"Name: {name}\nEmail: {email}\nMessage: {message}"
 
         send_mail(subject, recipient, body)  # Call the send_mail function
@@ -111,8 +115,16 @@ def send_mail(subject, recipient, body):
     msg["To"] = recipient
     msg.set_content(body)
 
+    password = os.getenv("MAIL_PASSWORD")
+    if password is None:
+        raise ValueError("MAIL_PASSWORD environment variable is not set")
+
+    mail_username = os.getenv("MAIL_USERNAME")
+    if mail_username is None:
+        raise ValueError("MAIL_USERNAME environment variable is not set")
+
     with smtplib.SMTP_SSL("smtp.mail.yahoo.com", 465) as smtp:
-        smtp.login(os.getenv("MAIL_USERNAME"), os.getenv("MAIL_PASSWORD"))
+        smtp.login(mail_username, password)
         smtp.send_message(msg)
 
 
