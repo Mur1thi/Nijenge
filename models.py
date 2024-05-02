@@ -1,3 +1,4 @@
+import logging
 from flask import render_template, session, redirect, url_for, g, request
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import func
@@ -91,7 +92,7 @@ class Fundraiser(db.Model):
         Returns the total amount raised as an integer. If no funds are raised, returns 0.
         """
         total = (
-            db.session.query(func.sum(Contribution.amount))
+            db.session.query(func.sum(Contribution.amount)) # type: ignore
             .filter_by(fundraiser_id=self.id)
             .scalar()
         )
