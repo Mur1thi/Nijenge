@@ -118,6 +118,30 @@ class Contribution(db.Model):
 
     fundraiser = db.relationship('Fundraiser', backref='contributions')
 
+    def __init__(self, fundraiser_id, contribution_reference, contributor_name, phone_number, amount, contribution_date, contribution_time):
+        """
+        Initializes a new Contribution object with the provided attributes.
+
+        Parameters:
+            fundraiser_id (int): The ID of the fundraiser associated with the contribution.
+            contribution_reference (str): The reference code of the contribution.
+            contributor_name (str): The name of the contributor.
+            phone_number (str): The phone number of the contributor.
+            amount (decimal): The amount of the contribution.
+            contribution_date (date): The date of the contribution.
+            contribution_time (time): The time of the contribution.
+
+        Returns:
+            None
+        """
+        self.fundraiser_id = fundraiser_id
+        self.contribution_reference = contribution_reference
+        self.contributor_name = contributor_name
+        self.phone_number = phone_number
+        self.amount = amount
+        self.contribution_date = contribution_date
+        self.contribution_time = contribution_time
+
     def to_dict(self):
         return {
             'contribution_reference': self.contribution_reference,

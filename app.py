@@ -269,32 +269,50 @@ def save_contribution(fundraiser_id):
         print(f"Message: {message}")
 
         contribution_reference = re.search(r"\b[A-Z0-9]{10}\b", message)
-        print(f"Contribution Reference Match: {contribution_reference}")
-        contribution_reference = contribution_reference.group()
+        if contribution_reference:
+            print(f"Contribution Reference Match: {contribution_reference}")
+            contribution_reference = contribution_reference.group()
+        else:
+            return error("Invalid contribution reference", 400)
 
         amount = re.search(r"Ksh([\d,]+)\.", message)
-        print(f"Amount Match: {amount}")
-        amount = amount.group(1)
+        if amount:
+            print(f"Amount Match: {amount}")
+            amount = amount.group(1)
+        else:
+            return error("Invalid amount", 400)
 
         contributor_name = re.search(r"from ([A-Z\s]+) \d", message)
-        print(f"Contributor Name Match: {contributor_name}")
-        contributor_name = contributor_name.group(1).strip()
+        if contributor_name:
+            print(f"Contributor Name Match: {contributor_name}")
+            contributor_name = contributor_name.group(1)
+        else:
+            return error("Invalid contributor name", 400)
 
         phone_number = re.search(r"(\d+) on", message)
-        print(f"Phone Number Match: {phone_number}")
-        phone_number = phone_number.group(1)
+        if phone_number:
+            print(f"Phone Number Match: {phone_number}")
+            phone_number = phone_number.group(1)
+        else:
+            return error("Invalid phone number", 400)
 
         contribution_date = re.search(r"on (\d{1,2}/\d{1,2}/\d{2}) at", message)
-        print(f"Contribution Date Match: {contribution_date}")
-        contribution_date = datetime.strptime(
-            contribution_date.group(1), "%d/%m/%y"
-        ).date()
+        if contribution_date:
+            print(f"Contribution Date Match: {contribution_date}")
+            contribution_date = datetime.strptime(
+                contribution_date.group(1), "%d/%m/%y"
+            ).date()
+        else:
+            return error("Invalid contribution date", 400)
 
         contribution_time = re.search(r"at (\d{1,2}:\d{2} (?:AM|PM))", message)
-        print(f"Contribution Time Match: {contribution_time}")
-        contribution_time = str(
-            datetime.strptime(contribution_time.group(1), "%I:%M %p").time()
-        )
+        if contribution_time:
+            print(f"Contribution Time Match: {contribution_time}")
+            contribution_time = str(
+                datetime.strptime(contribution_time.group(1), "%I:%M %p").time()
+            )
+        else:
+            return error("Invalid contribution time", 400)
 
         # Create a new Contribution object
         contribution = Contribution(
