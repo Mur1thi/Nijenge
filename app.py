@@ -4,7 +4,7 @@ import os
 import secrets
 from pathlib import Path
 import smtplib
-import dotenv
+import logging
 from dotenv import load_dotenv
 from email.message import EmailMessage
 from flask import (
@@ -248,7 +248,7 @@ def create_fundraiser():
             )  # Redirect to success page
 
         except Exception as e:
-            console.log(str(e))
+            logging.error(str(e)) # Works like console.log
             return error(str(e), 500)  # Handle any errors
 
     # Render the form for GET requests
