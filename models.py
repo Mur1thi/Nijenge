@@ -56,16 +56,23 @@ def error(message, code=400):
 
 class Fundraiser(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     name = db.Column(db.String, nullable=False)
     description = db.Column(db.String)
     end_date = db.Column(db.DateTime, nullable=False)
     target_funds = db.Column(db.Integer, nullable=False)
 
-    user = db.relationship('User', backref=db.backref('fundraisers', lazy=True))
+    user = db.relationship("User", backref=db.backref("fundraisers", lazy=True))
+
+    def __init__(self, user_id, name, description, end_date, target_funds):
+        self.user_id = user_id
+        self.name = name
+        self.description = description
+        self.end_date = end_date
+        self.target_funds = target_funds
 
     def __repr__(self):
-        return f'<Fundraiser {self.name}>'
+        return f"<Fundraiser {self.name}>"
 
     @property
     def funds_raised(self):
