@@ -200,12 +200,17 @@ def fundraiser():
     if has_active_fundraiser():
         # Redirect to fundraiser_success page if user has an active fundraiser
         user_fundraiser = Fundraiser.query.filter_by(user_id=g.user.id).first()
-        print("Fundraiser ID:", user_fundraiser.id)  # Print the fundraiser ID
-        return render_template(
-            "fundraiser_success.html",
-            fundraiser_id=user_fundraiser.id,
-            fundraiser=user_fundraiser,
-        )
+        if user_fundraiser is not None:
+            print("Fundraiser ID:", user_fundraiser.id)  # Print the fundraiser ID
+            return render_template(
+                "fundraiser_success.html",
+                fundraiser_id=user_fundraiser.id,
+                fundraiser=user_fundraiser,
+            )
+        else:
+            # Handle the case where user_fundraiser is None
+            # You can return an error message or redirect to another page
+            return "No active fundraiser found for the user"
     else:
         return create_fundraiser()
 
