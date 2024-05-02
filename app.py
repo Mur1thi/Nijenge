@@ -183,7 +183,9 @@ def register():
         hashed_password = generate_password_hash(password)
 
         # Rest of your registration logic
-        new_user = User(username=username, password=hashed_password)
+        new_user = User()
+        new_user.username = username
+        new_user.password = hashed_password
         db.session.add(new_user)
         db.session.commit()
 
