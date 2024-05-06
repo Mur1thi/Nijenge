@@ -2,21 +2,41 @@ window.addEventListener('DOMContentLoaded', () => {
   // Inside the event listener for your pagination buttons (previous/next)
   let page = 1; // Get the page number from the button or link clicked
   
-  fetch(`/report/${fundraiserId}/page/${page}`)
-    .then(response => response.json())
-    .then(contributionsData => {
+window.addEventListener("DOMContentLoaded", () => {
+  // Inside the event listener for your pagination buttons (previous/next)
+  let page = 1; // Get the page number from the button or link clicked
+
+  fetch(`/report/${fundraiserId}/page/${page}`, {
+    headers: {
+      "X-Requested-With": "XMLHttpRequest", // Important Addition!
+    },
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Non-JSON response received");
+      }
+      return response.json();
+    })
+    .then((contributionsData) => {
       updateContributionsTable(contributionsData);
     })
-    .catch(error => console.error("Error fetching data:", error));
+    .catch((error) => console.error("Error fetching data:", error));
 
-    function fetchContributionsData(page) {
-      fetch(`/report/${fundraiserId}/page/${page}`)
-        .then(response => response.json())
-        .then(contributionsData => {
-          updateContributionsTable(contributionsData);
-        })
-        .catch(error => console.error("Error fetching data:", error));
-    }
+/**
+ * Fetches contributions data from the server based on the specified page number.
+ *
+ * @param {number} page - The page number to fetch contributions data from.
+ * @return {Promise} A promise that resolves to the contributions data.
+ */
+  function fetchContributionsData(page) {
+    fetch(`/report/${fundraiserId}/page/${page}`)
+      .then((response) => response.json())
+      .then((contributionsData) => {
+        updateContributionsTable(contributionsData);
+      })
+      .catch((error) => console.error("Error fetching data:", error));
+  }
+});
 
   // Implement PDF download functionality
   try {

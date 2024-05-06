@@ -389,6 +389,7 @@ def report_index():
 @app.route("/report/<int:fundraiser_id>/page/<int:page_number>")
 @login_required
 def report(fundraiser_id, page_number):
+    app.logger.debug(f"X-Requested-With: {request.headers.get('X-Requested-With')}")
     try:
         if fundraiser_id == 0:
             return redirect(
@@ -422,14 +423,18 @@ def report(fundraiser_id, page_number):
         # Convert results to dicts and pass them to template
         contributions_dicts = [contribution.to_dict() for contribution in results]
 
-        # Render template
-        return render_template(
-            "report.html",
-            fundraiser=fundraiser,
-            contributions=contributions_dicts,
-            total_pages=total_pages,
-            current_page=page_number,
-        )
+        if 'X-Requested-With' in request.headers and request.headers['X-Requested-With'] == 'XMLHttpRequest':
+            # It's an AJAX request
+            return jsonify(contributions_dicts)
+        else:
+            # Render template
+            return render_template(
+                "report.html",
+                fundraiser=fundraiser,
+                contributions=contributions_dicts,
+                total_pages=total_pages,
+                current_page=page_number,
+            )
     except Exception as e:
         # Handle errors appropriately, e.g., log the error and return a user-friendly message
         # Log the error for debugging and troubleshooting
