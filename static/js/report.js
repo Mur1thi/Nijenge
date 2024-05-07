@@ -2,10 +2,6 @@ window.addEventListener('DOMContentLoaded', () => {
   // Inside the event listener for your pagination buttons (previous/next)
   let page = 1; // Get the page number from the button or link clicked
   
-window.addEventListener("DOMContentLoaded", () => {
-  // Inside the event listener for your pagination buttons (previous/next)
-  let page = 1; // Get the page number from the button or link clicked
-
   fetch(`/report/${fundraiserId}/page/${page}`, {
     headers: {
       "X-Requested-With": "XMLHttpRequest", // Important Addition!
@@ -75,7 +71,7 @@ window.addEventListener("DOMContentLoaded", () => {
   } catch (error) {
     console.error('Error with PDF download functionality:', error);
   }
-});
+
 
 function updateContributionsTable(contributionsData) {
   const contributionsTable = document.querySelector("#contributions-table tbody");
@@ -121,4 +117,4 @@ function updateContributionsTable(contributionsData) {
       contributionsTable.appendChild(contributionRow);
     }
   });
-}
+});
