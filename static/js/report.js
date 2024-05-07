@@ -1,10 +1,10 @@
-window.addEventListener('DOMContentLoaded', () => {
+window.addEventListener('DOMContentLoaded', (() => {
   // Inside the event listener for your pagination buttons (previous/next)
   let page = 1; // Get the page number from the button or link clicked
   
   fetch(`/report/${fundraiserId}/page/${page}`, {
     headers: {
-      "X-Requested-With": "XMLHttpRequest", // Important Addition!
+      "X-Requested-With": "XMLHttpRequest",
     },
   })
     .then((response) => {
@@ -18,12 +18,12 @@ window.addEventListener('DOMContentLoaded', () => {
     })
     .catch((error) => console.error("Error fetching data:", error));
 
-/**
- * Fetches contributions data from the server based on the specified page number.
- *
- * @param {number} page - The page number to fetch contributions data from.
- * @return {Promise} A promise that resolves to the contributions data.
- */
+  /**
+   * Fetches contributions data from the server based on the specified page number.
+   *
+   * @param {number} page - The page number to fetch contributions data from.
+   * @return {Promise} A promise that resolves to the contributions data.
+   */
   function fetchContributionsData(page) {
     fetch(`/report/${fundraiserId}/page/${page}`)
       .then((response) => response.json())
@@ -32,7 +32,6 @@ window.addEventListener('DOMContentLoaded', () => {
       })
       .catch((error) => console.error("Error fetching data:", error));
   }
-});
 
   // Implement PDF download functionality
   try {
@@ -72,40 +71,57 @@ window.addEventListener('DOMContentLoaded', () => {
     console.error('Error with PDF download functionality:', error);
   }
 
-
-function updateContributionsTable(contributionsData) {
+  function updateContributionsTable(contributionsData) {
   const contributionsTable = document.querySelector("#contributions-table tbody");
   contributionsTable.innerHTML = ""; // Clear existing rows
 
   if (contributionsData.length === 0) {
-    const row = document.createElement('tr');
+    const row = document.createElement("tr");
     row.innerHTML = '<td colspan="6">No contributions found</td>';
     contributionsTable.appendChild(row);
     return;
   }
 
-  contributionsData.forEach(contribution => {
+  contributionsData.forEach((contribution) => {
     // Check for duplicate reference before appending
-    if (!contributionsTable.querySelector(`[data-contribution-reference="${contribution.contribution_reference}"]`)) {
+    if (
+      !contributionsTable.querySelector(
+        `[data-contribution-reference="${contribution.contribution_reference}"]`
+      )
+    ) {
       const formattedContribution = { ...contribution }; // Create a copy for formatting
 
       // Format amount as currency
-      formattedContribution.amount = formattedContribution.amount.toLocaleString('en-KE', {
-        style: 'currency',
-        currency: 'KES'
-      });
+      const amount = Number(formattedContribution.amount);
+      if (!isNaN(amount)) {
+        formattedContribution.amount = amount.toLocaleString("en-KE", {
+          style: "currency",
+          currency: "KES",
+        });
+      }
 
       // Format dates
       try {
-        formattedContribution.contribution_date = new Date(contribution.contribution_date).toLocaleDateString();
-        formattedContribution.contribution_time = new Date(contribution.contribution_time).toLocaleTimeString();
+        const dateParts = contribution.contribution_date.split("-");
+        const timeParts = contribution.contribution_time.split(":");
+        
+        const contributionDate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
+        const contributionTime = new Date(1970, 0, 1, timeParts[0], timeParts[1], timeParts[2]);
+
+        if (!isNaN(contributionDate.getTime())) {
+          formattedContribution.contribution_date = contributionDate.toLocaleDateString();
+        }
+
+        if (!isNaN(contributionTime.getTime())) {
+          formattedContribution.contribution_time = contributionTime.toLocaleTimeString();
+        }
       } catch (error) {
-        console.error('Error parsing date:', error);
+        console.error("Error parsing date:", error);
         // Handle the error as needed
       }
 
       // Create table row
-      const contributionRow = document.createElement('tr');
+      const contributionRow = document.createElement("tr");
       contributionRow.innerHTML = `
         <td>${formattedContribution.contribution_reference}</td>
         <td>${formattedContribution.contributor_name}</td>
@@ -117,4 +133,5 @@ function updateContributionsTable(contributionsData) {
       contributionsTable.appendChild(contributionRow);
     }
   });
-});
+}
+})());
