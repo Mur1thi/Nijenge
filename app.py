@@ -258,6 +258,8 @@ def create_fundraiser():
 
 
 from datetime import datetime
+from flask import jsonify
+import math
 import re  # Import regular expressions for robust parsing
 
 
@@ -400,50 +402,36 @@ def report(fundraiser_id, page_number):
 
         # Pagination vars
         per_page = 10
-
         start = (page_number - 1) * per_page  # Calculate start index
 
         # Query contributions
         contributions = Contribution.query.filter_by(fundraiser_id=fundraiser_id)
-
-        # Get the total number of contributions
-        total_contributions = contributions.count()
-
-        # Calculate total pages
-        total_pages = math.ceil(total_contributions / per_page)
+        total_contributions = (
+            contributions.count()
+        )  # Get the total number of contributions
+        total_pages = math.ceil(total_contributions / per_page)  # Calculate total pages
 
         # Handle out of range page_number
         if start >= total_contributions:
-            # Return an error message or redirect to the first page
-            return "Page number out of range", 404
+            return jsonify({"error": "Page number out of range"}), 400
 
-        # Execute paginated query
-        results = contributions.limit(per_page).offset(start).all()
+        # Fetch contributions for the current page
+        contributions = contributions.slice(start, start + per_page).all()
+        contributions_dict = [contribution.to_dict() for contribution in contributions]
 
-        # Convert results to dicts and pass them to template
-        contributions_dicts = [contribution.to_dict() for contribution in results]
-
-        if 'X-Requested-With' in request.headers and request.headers['X-Requested-With'] == 'XMLHttpRequest':
-            # It's an AJAX request
-            return jsonify(contributions_dicts)
-        else:
-            # Render template
-            return render_template(
-                "report.html",
-                fundraiser=fundraiser,
-                contributions=contributions_dicts,
-                total_pages=total_pages,
-                current_page=page_number,
-            )
-    except Exception as e:
-        # Handle errors appropriately, e.g., log the error and return a user-friendly message
-        # Log the error for debugging and troubleshooting
-        app.logger.error(f"Error generating report: {str(e)}")
-        # Return a user-friendly error message or redirect to an error page
-        return error(
-            "An error occurred while generating the report. Please try again later.",
-            500,
+        return jsonify(
+            {
+                "items": contributions_dict,
+                "fundraiser": fundraiser.to_dict(),
+                "has_next": page_number < total_pages,
+                "next_num": page_number + 1 if page_number < total_pages else None,
+                "has_prev": page_number > 1,
+                "prev_num": page_number - 1 if page_number > 1 else None,
+            }
         )
+    except Exception as e:
+        app.logger.error(f"Error fetching report: {str(e)}")
+        return jsonify({"error": "Error fetching report"}), 500
 
 
 if __name__ == "__main__":

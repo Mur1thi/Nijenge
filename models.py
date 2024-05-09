@@ -85,6 +85,19 @@ class Fundraiser(db.Model):
     def __repr__(self):
         return f"<Fundraiser {self.name}>"
 
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "user_id": self.user_id,
+            "name": self.name,
+            "description": self.description,
+            "end_date": (
+                self.end_date.isoformat() if self.end_date else None
+            ),  # convert datetime to string
+            "target_funds": self.target_funds,
+            "funds_raised": self.funds_raised,
+        }
+
     @property
     def funds_raised(self):
         """

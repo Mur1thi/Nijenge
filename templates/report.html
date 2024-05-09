@@ -22,63 +22,27 @@
   </div>
 
   <h2>Fundraiser Report</h2>
-
+  
   <table id="contributions-table" class="table table-bordered table-striped">
-  <thead>
-    <tr>
-      <th>Reference</th>
-      <th>Contributor</th>
-      <th>Amount</th>
-      <th>Date</th>
-      <th>Time</th>
-      <th>Timestamp</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for contribution in contributions %}  <tr>
-        <td>{{ contribution.contribution_reference }}</td>
-        <td>{{ contribution.contributor_name }}</td>
-        <td>{{ contribution.amount|currency_format }}</td>
-        <td>{{ contribution.contribution_date }}</td>
-        <td>{{ contribution.contribution_time }}</td>
-        <td>{{ contribution.timestamp }}</td>
+    <thead>
+      <tr>
+        <th>Reference</th>
+        <th>Contributor</th>
+        <th>Amount</th>
+        <th>Date</th>
+        <th>Time</th>
+        <th>Timestamp</th>
       </tr>
-    {% endfor %}
-  </tbody>
-</table>
-
+    </thead>
+    <tbody id="contributions-table-body">
+      <!-- Rows will be added here by JavaScript -->
+    </tbody>
+  </table>
+  
   <nav aria-label="Page navigation">
-    <ul class="pagination">
-      {% if contributions.has_prev %}
-      <li class="page-item">
-        <a class="page-link"
-          href="{{ url_for('report', fundraiser_id=fundraiser.id, page_number=contributions.prev_num) }}"
-          data-page-number="{{ contributions.prev_num }}">Previous</a>
-      </li>
-      {% endif %}
-  
-      {% for page in range(1, total_pages + 1) %}
-      {% if page == current_page %}
-      <li class="active"><a href="#" data-page-number="{{ page }}">{{ page }}</a></li>
-      {% else %}
-      <li>
-        <a href="{{ url_for('report', fundraiser_id=fundraiser.id, page_number=page) }}" data-page-number="{{ page }}">{{
-          page }}</a>
-      </li>
-      {% endif %}
-      {% endfor %}
-  
-      {% if contributions.has_next %}
-      <li class="page-item">
-        <a class="page-link"
-          href="{{ url_for('report', fundraiser_id=fundraiser.id, page_number=contributions.next_num) }}"
-          data-page-number="{{ contributions.next_num }}">Next</a>
-      </li>
-      {% endif %}
+    <ul class="pagination" id="pagination">
+      <!-- Pagination links will be added here by JavaScript -->
     </ul>
   </nav>
-
-  <button id="download-pdf">Download PDF</button>
-
-  <pre id="contributions-data" style="display: none;">{{ contributions|tojson }}</pre>  </div>
+  
 {% endblock %}
