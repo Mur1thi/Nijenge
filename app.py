@@ -372,66 +372,47 @@ def save_contribution(fundraiser_id):
         fundraiser = Fundraiser.query.filter_by(user_id=g.user.id).first()
         return render_template("fundraiser_success.html", fundraiser=fundraiser)
 
-
+# Route to handle AJAX requests for fetching contributions
 @app.route("/report_index")
-@login_required  # login is required for both creating fundraisers and viewing reports
+@login_required
 def report_index():
-    fundraiser_id = has_active_fundraiser()  # Get the fundraiser ID if it exists
+    fundraiser_id = has_active_fundraiser()
     if fundraiser_id is None:
         return redirect(url_for("fundraiser"))
 
-    # Get a default page number or retrieve it from a query parameter
-    page_number = request.args.get("page", 1)
+    fundraiser = Fundraiser.query.get_or_404(fundraiser_id)  # Fetch the fundraiser
 
+    page_number = request.args.get("page", 1)
     return redirect(
-        url_for("report", fundraiser_id=fundraiser_id, page_number=page_number)
+        url_for("report", fundraiser_id=fundraiser.id, page_number=page_number) 
     )
 
 
-@app.route("/report/<int:fundraiser_id>/page/<int:page_number>")
+# Report route to fetch contributions for a specific fundraiser
+@app.route("/report/<int:fundraiser_id>")
 @login_required
-def report(fundraiser_id, page_number):
-    app.logger.debug(f"X-Requested-With: {request.headers.get('X-Requested-With')}")
-    try:
-        if fundraiser_id == 0:
-            return redirect(
-                url_for("fundraiser")
-            )  # Call create_fundraiser() when fundraiser_id is 0
+def report(fundraiser_id):
+    # 1. Fetch all contributions for the fundraiser
+    fundraiser = Fundraiser.query.get_or_404(fundraiser_id)
+    contributions = Contribution.query.filter_by(fundraiser_id=fundraiser_id).all()
 
-        fundraiser = Fundraiser.query.get_or_404(fundraiser_id)
+    # 2. Convert contributions to a list of dictionaries
+    contributions_dict = [
+        {
+            "reference": contribution.contribution_reference,
+            "name": contribution.contributor_name,
+            "amount": currency_format(contribution.amount),
+            "date": contribution.contribution_date.strftime("%d-%m-%Y"),
+            "time": contribution.contribution_time.strftime("%H:%M:%S"),
+            "timestamp": contribution.timestamp.strftime("%d-%m-%Y %H:%M:%S"),
+        }
+        for contribution in contributions
+    ]
 
-        # Pagination vars
-        per_page = 10
-        start = (page_number - 1) * per_page  # Calculate start index
-
-        # Query contributions
-        contributions = Contribution.query.filter_by(fundraiser_id=fundraiser_id)
-        total_contributions = (
-            contributions.count()
-        )  # Get the total number of contributions
-        total_pages = math.ceil(total_contributions / per_page)  # Calculate total pages
-
-        # Handle out of range page_number
-        if start >= total_contributions:
-            return jsonify({"error": "Page number out of range"}), 400
-
-        # Fetch contributions for the current page
-        contributions = contributions.slice(start, start + per_page).all()
-        contributions_dict = [contribution.to_dict() for contribution in contributions]
-
-        return jsonify(
-            {
-                "items": contributions_dict,
-                "fundraiser": fundraiser.to_dict(),
-                "has_next": page_number < total_pages,
-                "next_num": page_number + 1 if page_number < total_pages else None,
-                "has_prev": page_number > 1,
-                "prev_num": page_number - 1 if page_number > 1 else None,
-            }
-        )
-    except Exception as e:
-        app.logger.error(f"Error fetching report: {str(e)}")
-        return jsonify({"error": "Error fetching report"}), 500
+    # 3. Render the template with initial contributions
+    return render_template(
+        "report.html", fundraiser=fundraiser, contributions=contributions_dict
+    )
 
 
 if __name__ == "__main__":

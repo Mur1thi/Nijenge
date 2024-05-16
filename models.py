@@ -196,6 +196,9 @@ class Contribution(db.Model):
             "contribution_date": self.contribution_date.strftime(
                 "%Y-%m-%d"
             ),  # Convert date to string
+            "funds_raised": self.fundraiser.funds_raised,
+                # Calculate the total amount of funds raised for the fundraiser associated with the contribution
+            
         }
 
     def __repr__(self):
