@@ -17,12 +17,10 @@ document.addEventListener("DOMContentLoaded", function () {
   }
   // Fetch report data from the server
   function fetchReportData(fundraiserId) {
-    fetch(`/report/${fundraiserId}`) 
+    fetch(`/report/${fundraiserId}?format=json`)
       .then((response) => {
         if (!response.ok) {
-          throw new Error(
-            `Network response was not ok: ${response.statusText}`
-          );
+          throw new Error(`Network response was not ok: ${response.statusText}`);
         }
         return response.json();
       })
@@ -32,6 +30,7 @@ document.addEventListener("DOMContentLoaded", function () {
       .catch((error) => console.error("Error:", error));
   }
 
+
   function updateContributionsTable(contributions) {
     const tableBody = document.querySelector("#contributions-table-body");
     tableBody.innerHTML = ""; // Clear the table body
@@ -40,8 +39,8 @@ document.addEventListener("DOMContentLoaded", function () {
       const row = tableBody.insertRow();
 
       // Create and append cells for each column (replace with your actual data)
-      row.insertCell().textContent = contribution.contribution_reference;
-      row.insertCell().textContent = contribution.contributor_name;
+      row.insertCell().textContent = contribution.reference;
+      row.insertCell().textContent = contribution.name;
       row.insertCell().textContent = contribution.amount;
       row.insertCell().textContent = contribution.date;
       row.insertCell().textContent = contribution.time;

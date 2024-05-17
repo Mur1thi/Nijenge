@@ -392,11 +392,11 @@ def report_index():
 @app.route("/report/<int:fundraiser_id>")
 @login_required
 def report(fundraiser_id):
-    # 1. Fetch all contributions for the fundraiser
+    # Fetch all contributions for the fundraiser
     fundraiser = Fundraiser.query.get_or_404(fundraiser_id)
     contributions = Contribution.query.filter_by(fundraiser_id=fundraiser_id).all()
 
-    # 2. Convert contributions to a list of dictionaries
+    # Convert contributions to a list of dictionaries
     contributions_dict = [
         {
             "reference": contribution.contribution_reference,
@@ -409,10 +409,14 @@ def report(fundraiser_id):
         for contribution in contributions
     ]
 
-    # 3. Render the template with initial contributions
-    return render_template(
-        "report.html", fundraiser=fundraiser, contributions=contributions_dict
-    )
+    if request.args.get("format") == "json":
+        # Return JSON response if 'format' query parameter is 'json'
+        return jsonify(items=contributions_dict)
+    else:
+        # Render the template with initial contributions
+        return render_template(
+            "report.html", fundraiser=fundraiser, contributions=contributions_dict
+        )
 
 
 if __name__ == "__main__":
