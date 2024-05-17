@@ -3,56 +3,57 @@
 {% block title %}Fundraiser Report{% endblock %}
 
 {% block content %}
-  <script src="/static/js/report.js" type="module"></script>
-  <div class="container">
-    <input type="hidden" id="fundraiser-id" value="{{ fundraiser.id }}">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.13/jspdf.plugin.autotable.min.js"></script>
+<script>
+  const fundraiser = {
+    name: "{{ fundraiser.name }}",
+    description: "{{ fundraiser.description }}",
+    end_date: "{{ fundraiser.end_date.strftime('%B %d, %Y') }}",
+    target_funds: "{{ fundraiser.target_funds | currency_format }}",
+    funds_raised: "{{ fundraiser.funds_raised | currency_format }}"
+  };
+</script>
+<script src="/static/js/report.js" type="module"></script>
+<div class="container">
+  <input type="hidden" id="fundraiser-id" value="{{ fundraiser.id }}">
 
-    <h1>Report</h1>
+  <h1>Report</h1>
 
-    <div class="card">
-      <div class="card-body">
-        <h4 class="card-title">{{ fundraiser.name }}</h4>
-        <p class="card-text">{{ fundraiser.description }}</p>
-        <p class="text-muted">
-          End Date: {{ fundraiser.end_date.strftime("%B %d, %Y") }}<br>
-          Target Funds: {{ fundraiser.target_funds | currency_format }}<br>
-          Funds Raised: {{ fundraiser.funds_raised | currency_format }}
-        </p>
-      </div>
+  <div class="card">
+    <div class="card-body">
+      <h4 class="card-title">{{ fundraiser.name }}</h4>
+      <p class="card-text">{{ fundraiser.description }}</p>
+      <p class="text-muted">
+        End Date: {{ fundraiser.end_date.strftime("%B %d, %Y") }}<br>
+        Target Funds: {{ fundraiser.target_funds | currency_format }}<br>
+        Funds Raised: {{ fundraiser.funds_raised | currency_format }}
+      </p>
     </div>
+  </div>
 
-    <h2>Fundraiser Report</h2>
-    
-    <table id="contributions-table" class="table table-bordered table-striped">
-      <thead>
-        <tr>
-          <th>Reference</th>
-          <th>Name</th>
-          <th>Amount</th>
-          <th>Date</th>
-          <th>Time</th>
-          <th>Timestamp</th>
-        </tr>
-      </thead>
-      <tbody id="contributions-table-body">
-        {% for contribution in contributions %}
-        <tr>
-          <td>{{ contribution.reference }}</td>
-          <td>{{ contribution.name }}</td>
-          <td>{{ contribution.amount }}</td>
-          <td>{{ contribution.date }}</td>
-          <td>{{ contribution.time }}</td>
-          <td>{{ contribution.timestamp }}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-          <div id="pagination-controls">
-            <button id="prev-page">Previous</button>
-            <span id="page-info"></span>
-            <button id="next-page">Next</button>
-          </div>
-          </div>
-    </div>
-    {% endblock %}
+  <h2>Fundraiser Report</h2>
 
+  <table id="contributions-table" class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <th>Reference</th>
+        <th>Name</th>
+        <th>Amount</th>
+        <th>Date</th>
+        <th>Time</th>
+        <th>Timestamp</th>
+      </tr>
+    </thead>
+    <tbody id="contributions-table-body"></tbody>
+  </table>
+
+  <div id="pagination-controls">
+    <button id="prev-page" class="btn btn-primary">Previous</button>
+    <span id="page-info"></span>
+    <button id="next-page" class="btn btn-primary">Next</button>
+  </div>
+
+  <button id="download-pdf" class="btn btn-success">Download PDF</button>
+</div>
+{% endblock %}

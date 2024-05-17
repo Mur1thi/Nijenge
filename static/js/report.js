@@ -82,4 +82,46 @@ document.addEventListener("DOMContentLoaded", function () {
       updateContributionsTable();
     }
   });
+
+  // Event listener for the download button
+  document
+    .getElementById("download-pdf")
+    .addEventListener("click", generatePDF);
+
+  // Generate PDF
+  function generatePDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    // Add Nijenge and Fundraiser details
+    doc.setFont("Times");
+    doc.setFontSize(14);
+    doc.text("Nijenge", 20, 20);
+    doc.text(`Fundraiser: ${fundraiser.name}`, 20, 30);
+    doc.text(`Description: ${fundraiser.description}`, 20, 40);
+    doc.text(`End Date: ${fundraiser.end_date}`, 20, 50);
+    doc.text(`Target Funds: ${fundraiser.target_funds}`, 20, 60);
+    doc.text(`Funds Raised: ${fundraiser.funds_raised}`, 20, 70);
+
+    // Add some space before the table
+    doc.text("", 20, 80);
+
+    // Add contributions table
+    doc.autoTable({
+      startY: 90,
+      head: [["Reference", "Name", "Amount", "Date", "Time", "Timestamp"]],
+      body: contributions.map((contribution) => [
+        contribution.reference,
+        contribution.name,
+        contribution.amount,
+        contribution.date,
+        contribution.time,
+        contribution.timestamp,
+      ]),
+      margin: { top: 10 },
+    });
+
+    // Save the PDF
+    doc.save(`Fundraiser_Report_${fundraiser.name}.pdf`);
+  }
 });
