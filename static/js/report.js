@@ -16,9 +16,9 @@ document.addEventListener("DOMContentLoaded", function () {
     return null;
   }
 
+  // Removed pageNumber parameter
   function fetchReportData(fundraiserId) {
-    // Removed pageNumber parameter
-    fetch(`/report/${fundraiserId}`) // Adjusted fetch URL
+    fetch(`/report/${fundraiserId}`) 
       .then((response) => {
         if (!response.ok) {
           throw new Error(
