@@ -15,8 +15,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     return null;
   }
-
-  // Removed pageNumber parameter
+  // Fetch report data from the server
   function fetchReportData(fundraiserId) {
     fetch(`/report/${fundraiserId}`) 
       .then((response) => {
