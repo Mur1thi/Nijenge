@@ -1,7 +1,7 @@
 # Nijenge
 #### Video Demo:  https://youtu.be/prTN5PxmBTs
 #### Description: 
-Toa is a web application to allow users to create crowdfunding campaigns and track donations. 
+Nijenge is a web application to allow users to create crowdfunding campaigns and track donations. 
 
 ## Features
 
