@@ -16,7 +16,7 @@
   --card-background-color: #f8f9fa;
   --button-background-color: #007bff;
   --button-text-color: #ffffff;
-  --footer-height: 100px;  /* Adjust this to your preferred height */
+  --footer-height: 65px;  /* Adjust this to your preferred height */
   --bs-blue: #0d6efd;
   --bs-indigo: #6610f2;
   --bs-purple: #6f42c1;
@@ -112,7 +112,7 @@
   --card-background-color: #1e1e1e;
   --button-background-color: #4caf50;
   --button-text-color: #ffffff;
-  --footer-height: 50px;  /* Adjust this to your preferred height */
+  --footer-height: 65px;  /* Adjust this to your preferred height */
 }
 
 .toggle-switch {
