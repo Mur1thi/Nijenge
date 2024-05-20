@@ -30,9 +30,6 @@ from models import (
     Contribution,
 )
 from models import db
-from flask_wtf.csrf import CSRFProtect
-
-csrf = CSRFProtect(app)
 
 
 # Load environment variables from .env file
