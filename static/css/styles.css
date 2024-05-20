@@ -16,6 +16,7 @@
   --card-background-color: #f8f9fa;
   --button-background-color: #007bff;
   --button-text-color: #ffffff;
+  --footer-height: 100px;  /* Adjust this to your preferred height */
   --bs-blue: #0d6efd;
   --bs-indigo: #6610f2;
   --bs-purple: #6f42c1;
@@ -95,6 +96,12 @@
   align-items: center;
 }
 
+.theme-toggle-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .toggle-text {
   margin-left: 10px;
 }
@@ -105,6 +112,7 @@
   --card-background-color: #1e1e1e;
   --button-background-color: #4caf50;
   --button-text-color: #ffffff;
+  --footer-height: 50px;  /* Adjust this to your preferred height */
 }
 
 .toggle-switch {
@@ -145,6 +153,17 @@
 *::before,
 *::after {
   box-sizing: border-box;
+}
+
+footer {
+  padding: 1em;
+  text-align: center;
+  background: var(--card-background-color);
+  color: var(--text-color);
+  height: var(--footer-height);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -2994,7 +3013,8 @@ textarea.form-control.is-invalid {
   user-select: none;
   border: var(--bs-btn-border-width) solid var(--bs-btn-border-color);
   border-radius: var(--bs-btn-border-radius);
-  background-color: var(--bs-btn-bg);
+  background-color: var(--button-background-color);
+  color: var(--button-text-color);
   transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
     border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
