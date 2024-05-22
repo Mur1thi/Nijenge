@@ -377,6 +377,26 @@ def save_contribution(fundraiser_id):
 @app.route("/report_index")
 @login_required
 def report_index():
+    """
+    Retrieves the active fundraiser for the logged-in user and redirects to the report page.
+    
+    This function is a route handler for the "/report_index" URL. It is decorated with the `@login_required` decorator,
+    which means that the user must be logged in to access this route.
+    
+    The function first calls the `has_active_fundraiser()` function to retrieve the ID of the active fundraiser for
+    the logged-in user. If no active fundraiser is found, the function redirects the user to the "/fundraiser" URL.
+    
+    If an active fundraiser is found, the function fetches the fundraiser object using the `Fundraiser.query.get_or_404()`
+    method and assigns it to the `fundraiser` variable.
+    
+    The function then retrieves the value of the "page" query parameter from the request. If the parameter is not present,
+    the default value of 1 is used.
+    
+    Finally, the function redirects the user to the "/report" URL with the `fundraiser_id` and `page_number` as query parameters.
+    
+    Returns:
+        A redirect response to the "/report" URL with the `fundraiser_id` and `page_number` as query parameters.
+    """
     fundraiser_id = has_active_fundraiser()
     if fundraiser_id is None:
         return redirect(url_for("fundraiser"))
