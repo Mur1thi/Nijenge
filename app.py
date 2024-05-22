@@ -265,88 +265,80 @@ import re  # Import regular expressions for robust parsing
 
 
 @app.route("/fundraiser_success/<int:fundraiser_id>", methods=["GET", "POST"])
-@login_required  # Ensures the user is logged in
+@login_required
 def save_contribution(fundraiser_id):
+    """
+    Save a contribution made to a fundraiser.
+
+    This route handles both GET and POST requests to save a contribution made to a fundraiser.
+    It requires the user to be logged in.
+
+    Parameters:
+        fundraiser_id (int): The ID of the fundraiser to which the contribution is made.
+
+    Returns:
+        - If the request method is POST:
+            - If the contribution reference, amount, contributor name, phone number, contribution date,
+              and contribution time are valid and can be extracted from the message, a JSON response
+              with the status "success" and the saved contribution data is returned.
+            - If any of the required information is missing or invalid, a JSON response with the status
+              "error" and an error message is returned.
+        - If the request method is GET:
+            - The "fundraiser_success.html" template is rendered with the fundraiser object.
+
+    Raises:
+        - If there is an error saving the contribution to the database, a JSON response with the status
+          "error" and the error message is returned.
+    """
+    fundraiser = Fundraiser.query.get_or_404(fundraiser_id)
     if request.method == "POST":
         message = request.form["message"]
-        print(f"Message: {message}")
-
         contribution_reference = re.search(r"\b[A-Z0-9]{10}\b", message)
-        if contribution_reference:
-            print(f"Contribution Reference Match: {contribution_reference}")
-            contribution_reference = contribution_reference.group()
-        else:
+        if not contribution_reference:
             return error("Invalid contribution reference", 400)
+        contribution_reference = contribution_reference.group()
 
         amount = re.search(r"Ksh([\d,]+)\.", message)
-        if amount:
-            print(f"Amount Match: {amount}")
-            amount = amount.group(1)
-        else:
+        if not amount:
             return error("Invalid amount", 400)
+        amount = amount.group(1).replace(",", "")
 
         contributor_name = re.search(r"from ([A-Z\s]+) \d", message)
-        if contributor_name:
-            print(f"Contributor Name Match: {contributor_name}")
-            contributor_name = contributor_name.group(1)
-        else:
+        if not contributor_name:
             return error("Invalid contributor name", 400)
+        contributor_name = contributor_name.group(1)
 
         phone_number = re.search(r"(\d+) on", message)
-        if phone_number:
-            print(f"Phone Number Match: {phone_number}")
-            phone_number = phone_number.group(1)
-        else:
+        if not phone_number:
             return error("Invalid phone number", 400)
+        phone_number = phone_number.group(1)
 
         contribution_date = re.search(r"on (\d{1,2}/\d{1,2}/\d{2}) at", message)
-        if contribution_date:
-            print(f"Contribution Date Match: {contribution_date}")
-            contribution_date = datetime.strptime(
-                contribution_date.group(1), "%d/%m/%y"
-            ).date()
-        else:
+        if not contribution_date:
             return error("Invalid contribution date", 400)
+        contribution_date = datetime.strptime(
+            contribution_date.group(1), "%d/%m/%y"
+        ).date()
 
         contribution_time = re.search(r"at (\d{1,2}:\d{2} (?:AM|PM))", message)
-        if contribution_time:
-            print(f"Contribution Time Match: {contribution_time}")
-            contribution_time = str(
-                datetime.strptime(contribution_time.group(1), "%I:%M %p").time()
-            )
-        else:
+        if not contribution_time:
             return error("Invalid contribution time", 400)
+        contribution_time = datetime.strptime(contribution_time.group(1), "%I:%M %p").time()
 
-        # Create a new Contribution object
         contribution = Contribution(
             fundraiser_id=fundraiser_id,
             contribution_reference=contribution_reference,
             contributor_name=contributor_name,
             phone_number=phone_number,
-            amount=amount.replace(",", ""),
+            amount=amount,
             contribution_date=contribution_date,
-            contribution_time=datetime.strptime(contribution_time, "%H:%M:%S").time(),
+            contribution_time=contribution_time,
         )
-        print(f"Fundraiser ID: {fundraiser_id}")
-        print(f"Contribution Date: {contribution.contribution_date}")
-        print(f"Contribution Time: {contribution.contribution_time}")
-        print(f"Contribution Reference: {contribution.contribution_reference}")
-        print(f"Contributor Name: {contribution.contributor_name}")
-        print(f"Phone Number: {contribution.phone_number}")
-        print(f"Amount: {contribution.amount}")
-        # Add the new Contribution to the current database session
         db.session.add(contribution)
-
-        # Try to commit the changes to save the new Contribution to the database
         try:
             db.session.commit()
         except Exception as e:
             return jsonify({"status": "error", "message": str(e)})
-
-        # Get the updated fundraiser object with the new funds_raised value
-        fundraiser = Fundraiser.query.get_or_404(fundraiser_id)
-
-        print(f"Fundraiser Funds Raised: {fundraiser.funds_raised}") # Print the updated funds_raised value
 
         return jsonify(
             {
@@ -364,13 +356,8 @@ def save_contribution(fundraiser_id):
                 },
             }
         )
-        # Render the form for a fresh Update request
-        # Retrieve the fundraiser object
 
     else:
-        # handle GET request...
-        # Retrieve the fundraiser object
-        fundraiser = Fundraiser.query.filter_by(user_id=g.user.id).first()
         return render_template("fundraiser_success.html", fundraiser=fundraiser)
 
 # Route to handle AJAX requests for fetching contributions
