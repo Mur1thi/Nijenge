@@ -388,7 +388,16 @@ def report_index():
         url_for("report", fundraiser_id=fundraiser.id, page_number=page_number) 
     )
 
+"""
+Retrieves all contributions for a specific fundraiser and renders a report template with the contributions.
 
+Parameters:
+    fundraiser_id (int): The ID of the fundraiser.
+
+Returns:
+    If the 'format' query parameter is 'json', returns a JSON response with a list of contributions.
+    Otherwise, renders the 'report.html' template with the fundraiser and contributions data.
+"""
 # Report route to fetch contributions for a specific fundraiser
 @app.route("/report/<int:fundraiser_id>")
 @login_required
