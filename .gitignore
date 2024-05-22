@@ -1,8 +1,8 @@
-node_modules
-siri.env
 *.pyc
 __pycache__/
 instance/
 .env
 .DS_Store
 .vscode/
+.idea/
+Nijenge_env/
