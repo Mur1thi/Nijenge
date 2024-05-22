@@ -198,6 +198,30 @@ def register():
 @app.route("/fundraiser", methods=["GET", "POST"])
 @login_required  # Decorator to check for login status
 def fundraiser():
+    """
+    Handles the "/fundraiser" route for both GET and POST requests.
+    
+    This function is a route handler for the "/fundraiser" URL. It is decorated with the `@login_required` decorator,
+    which means that the user must be logged in to access this route.
+    
+    The function first checks if the user has an active fundraiser by calling the `has_active_fundraiser()` function.
+    If the user has an active fundraiser, the function redirects to the "fundraiser_success" page with the fundraiser ID.
+    
+    If the user does not have an active fundraiser, the function calls the `create_fundraiser()` function.
+    
+    Parameters:
+        None
+        
+    Returns:
+        - If the user has an active fundraiser:
+            - If the `user_fundraiser` object is not None:
+                - Prints the fundraiser ID.
+                - Renders the "fundraiser_success.html" template with the fundraiser ID and the `user_fundraiser` object.
+            - If the `user_fundraiser` object is None:
+                - Returns the error message "No active fundraiser found for the user".
+        - If the user does not have an active fundraiser:
+            - Calls the `create_fundraiser()` function.
+    """
     if has_active_fundraiser():
         # Redirect to fundraiser_success page if user has an active fundraiser
         user_fundraiser = Fundraiser.query.filter_by(user_id=g.user.id).first()
