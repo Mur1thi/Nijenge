@@ -1,12 +1,15 @@
 # Nijenge
-#### Video Demo:  https://youtu.be/prTN5PxmBTs
-#### Description: 
-Nijenge is a web application to allow users to create crowdfunding campaigns and track donations. 
+
+#### Video Demo: https://youtu.be/prTN5PxmBTs
+
+#### Description:
+
+Nijenge is a web application to allow users to create crowdfunding campaigns and track donations.
 
 ## Features
 
 - User authentication (register, login, logout)
-- Create and manage crowdfunding campaigns 
+- Create and manage crowdfunding campaigns
 - Track donations and contributions
 - View campaign contribution reports
 - PDF export for contribution reports
@@ -32,7 +35,7 @@ fundraising-platform
 │   ├── css/
 │   │   └── styles.css
 │   ├── js/
-│   │   ├── scripts.js 
+│   │   ├── scripts.js
 │   │   └── Toastr.js
 │   └── assets/
 │       └── logo.png
@@ -42,7 +45,7 @@ fundraising-platform
 │   ├── login.html
 │   ├── register.html
 │   ├── fundraiser.html
-│   ├── fundraiser_success.html 
+│   ├── fundraiser_success.html
 │   └── report.html
 ├── migrations/
 │   ├── alembic.ini
@@ -55,7 +58,7 @@ fundraising-platform
 ├── tests/
 │   ├── conftest.py
 │   ├── test_app.py
-│   └── test_api.py 
+│   └── test_api.py
 ├── venv/
 └── .gitignore
 ```
@@ -65,13 +68,13 @@ fundraising-platform
 - `app.py` - Flask application factory and routes
 - `models.py` - Database models
 - `forms.py` - WTForms for validation
-- `api.py` - REST API endpoints 
+- `api.py` - REST API endpoints
 
 ## Folders
 
-- `static/` - CSS, JS, images 
+- `static/` - CSS, JS, images
 - `templates/` - Jinja templates
-- `migrations/` - Schema migration config and scripts 
+- `migrations/` - Schema migration config and scripts
 - `tests/` - pytest unit tests
 - `venv/` - Python virtual environment
 
@@ -80,18 +83,18 @@ fundraising-platform
 The frontend uses Bootstrap for styling and layout. Additional JS libraries used:
 
 - jQuery - For AJAX requests and DOM manipulation
-- Toastr - For notification messages 
+- Toastr - For notification messages
 - JSPDF - For generating PDF exports
 
 The main frontend files are:
 
-- `static/css/styles.css` - Custom CSS 
-- `static/js/scripts.js` - Custom JS code 
+- `static/css/styles.css` - Custom CSS
+- `static/js/scripts.js` - Custom JS code
 - `templates/layout.html` - Base layout
 - `templates/index.html` - Homepage
 - `templates/login.html` - Login page
 - `templates/register.html` - Registration page
-- `templates/error.html` - Error page 
+- `templates/error.html` - Error page
 
 Frontend code handles:
 
@@ -105,9 +108,9 @@ Frontend code handles:
 
 The app uses built-in Flask sessions for authentication. Users can:
 
-- Register a new account 
+- Register a new account
 - Log in to an existing account
-- Log out 
+- Log out
 
 Passwords are hashed using `werkzeug.security` before storing in the database.
 
@@ -119,7 +122,7 @@ The `/fundraiser` page allows users to create a new crowdfunding campaign.
 
 They can enter:
 
-- Name 
+- Name
 - Description
 - End date
 - Target funds amount
@@ -134,7 +137,7 @@ Once created, users are redirected to the campaign page.
 
 It shows:
 
-- Name 
+- Name
 - Description
 - End date
 - Target funds
@@ -150,7 +153,7 @@ The response from the API is used to display a success or error notification.
 To manually test creating and updating campaigns:
 
 1. Register a new account
-2. Go to `/fundraiser` and create a new campaign 
+2. Go to `/fundraiser` and create a new campaign
 3. Enter any test data for the fields
 4. You'll be redirected to the campaign page
 5. Try submitting a few test contribution messages and verify if they are saved correctly
@@ -159,7 +162,7 @@ Some example contribution messages:
 
 ```
 You have received Ksh 1,000.00 from John Doe 0722333333 on 12/12/22 at 3:30 PM
-You have received Ksh 2,345.67 from Jane Doe 0733444444 on 31/12/22 at 12:00 PM  
+You have received Ksh 2,345.67 from Jane Doe 0733444444 on 31/12/22 at 12:00 PM
 ```
 
 The endpoint parses these messages to extract the relevant details.
@@ -176,7 +179,7 @@ Database relationships, queries, inserts and updates are defined in `models.py`.
 
 ## Database Schema
 
-The database uses SQLite and SQLAlchemy ORM. 
+The database uses SQLite and SQLAlchemy ORM.
 
 The main tables are:
 
@@ -187,19 +190,19 @@ Stores user accounts.
 Columns:
 
 - `id` - Primary key
-- `username` - Unique username 
+- `username` - Unique username
 - `password` - Hashed password
 
-### Fundraisers 
+### Fundraisers
 
 Stores fundraising campaigns created by users.
 
-Columns: 
+Columns:
 
 - `id` - Primary key
-- `user_id` - Foreign key to users table 
+- `user_id` - Foreign key to users table
 - `name` - Name of fundraiser
-- `description` - Longer description 
+- `description` - Longer description
 - `end_date` - Campaign end date
 - `target_funds` - Fundraising target amount
 
@@ -211,10 +214,10 @@ Columns:
 
 - `contribution_id` - Primary key
 - `fundraiser_id` - Foreign key to fundraisers table
-- `contribution_reference` - Payment reference code  
+- `contribution_reference` - Payment reference code
 - `contributor_name` - Name of donor
 - `phone_number` - Donor phone number
-- `amount` - Donation amount 
+- `amount` - Donation amount
 - `contribution_date` - Date of donation
 - `contribution_time` - Time of donation
 - `timestamp` - Timestamp of insertion
@@ -255,7 +258,7 @@ Frontend JS code handles calling this endpoint and displaying the response.
 1. Clone the repository
 
 ```
-git clone https://github.com/Mur1thi/Toa.git
+git clone https://github.com/Mur1thi/Nijenge.git
 ```
 
 2. Create and activate a virtual environment
@@ -285,7 +288,7 @@ The app will be served at `http://127.0.0.1:5000/`
 
 Go to `/register` and enter a username and password.
 
-**Login** 
+**Login**
 
 Go to `/login` and enter your credentials.
 
@@ -297,10 +300,9 @@ Go to `/fundraiser`, fill out the form and submit.
 
 Go to `/report` to see a paginated list of contributions.
 
-**Download contribution report** 
+**Download contribution report**
 
 Click the "Download PDF" button on the `/report` page.
-
 
 ## Testing
 
