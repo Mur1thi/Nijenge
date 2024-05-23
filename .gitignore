@@ -80,7 +80,6 @@ ipython_config.py
 .env
 .env.bak
 .flaskenv
-siri.env
 
 # VS Code
 .vscode/

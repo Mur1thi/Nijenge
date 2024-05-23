@@ -7,6 +7,15 @@
     "test": "jest"
   },
   "dependencies": {
-    "jspdf": "^2.5.1"
-  }
+    "html2canvas": "^1.4.1",
+    "jspdf": "^2.5.1",
+    "jspdf-autotable": "^3.8.2"
+  },
+  "name": "nijenge",
+  "description": "#### Video Demo: https://youtu.be/prTN5PxmBTs",
+  "version": "1.0.0",
+  "main": "index.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }

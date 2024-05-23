@@ -33,7 +33,7 @@ from models import db
 
 
 # Load environment variables from .env file
-load_dotenv("siri.env")
+load_dotenv()
 
 app = Flask(__name__)
 Bootstrap(app)

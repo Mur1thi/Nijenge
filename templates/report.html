@@ -15,6 +15,9 @@
   };
 </script>
 <script src="/static/js/report.js" type="module"></script>
+<!-- Include jsPDF and jsPDF-AutoTable from node_modules -->
+<script src="{{ url_for('static', filename='js/jspdf.umd.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/jspdf.plugin.autotable.js') }}"></script>
 <div class="container">
   <input type="hidden" id="fundraiser-id" value="{{ fundraiser.id }}">
 
