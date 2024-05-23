@@ -80,6 +80,7 @@ ipython_config.py
 .env
 .env.bak
 .flaskenv
+siri.env
 
 # VS Code
 .vscode/
@@ -95,3 +96,6 @@ node_modules/
 npm-debug.log
 yarn-error.log
 yarn-debug.log
+
+# Other JSON files
+*.json
