@@ -255,7 +255,7 @@ Frontend JS code handles calling this endpoint and displaying the response.
 1. Clone the repository
 
 ```
-git clone https://github.com/Mur1thi/Toa.git
+git clone https://github.com/Mur1thi/Nijenge.git
 ```
 
 2. Create and activate a virtual environment
