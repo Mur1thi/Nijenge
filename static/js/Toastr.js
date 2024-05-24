@@ -1,15 +1,12 @@
 document.addEventListener("DOMContentLoaded", function () {
   // Fetch and display initial flash messages (if any)
-  $(document).ready(function () {
-    const flashMessage = getFlashMessageFromCookie();
-    console.log("Flash message from cookie:", flashMessage); // Debug print
-    if (flashMessage) {
-      toastr.success(flashMessage);
-      clearFlashMessageCookie(); // Clear the cookie immediately after displaying the message
-    } else {
-      console.log("No flash message found in cookie.");
-    }
-  });
+  const flashMessage = getFlashMessageFromCookie();
+  if (flashMessage) {
+    toastr.success(flashMessage);
+    clearFlashMessageCookie(); // Clear the cookie immediately after displaying the message
+  } else {
+    console.log("No flash message found in cookie.");
+  }
 
   function getFlashMessageFromCookie() {
     const cookies = document.cookie.split(";");
@@ -77,4 +74,17 @@ document.addEventListener("DOMContentLoaded", function () {
       saveContribution(fundraiserId, message);
     });
   }
+
+  // Fetch flash messages from the server
+  fetch("/messages")
+    .then((response) => response.json())
+    .then((data) => {
+      const messages = data.messages;
+      messages.forEach(function (message) {
+        const category = message[0];
+        const text = message[1];
+        toastr[category](text);
+      });
+    })
+    .catch((error) => console.error("Error fetching messages:", error));
 });

@@ -181,16 +181,11 @@ def login():
                 flash("Login successful", "success")
 
                 # Redirect to index on successful login
-                response = make_response(redirect(url_for("index")))
-                response.set_cookie("flash_message", "Login successful", path="/")
-                return response
-
+                return redirect(url_for("index"))
             else:
                 flash("Invalid username or password", "error")
         except Exception as e:
             flash(str(e), "error")
-
-        return render_template("login.html")
 
     return render_template("login.html")
 
