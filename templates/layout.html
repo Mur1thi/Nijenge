@@ -5,10 +5,11 @@
       <img src="{{ url_for('static', filename='assets/favicon.ico') }}" alt="Logo" width="30" height="24">
       NIJENGE
     </a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-      {% if session.user_id %}
+    {% if session.user_id %}
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ms-auto">
         <li class="nav-item"><a class="nav-link" href="/fundraiser">Fundraiser</a></li>
@@ -17,53 +18,51 @@
         <li class="nav-item"><a class="nav-link" href="/logout">Logout</a></li>
       </ul>
     </div>
-      {% endif %}
+    {% endif %}
   </div>
 </nav>
-
 {% endmacro %}
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <link rel="icon" href="{{ url_for('static', filename='assets/favicon.ico') }}">
+  <link rel="icon" href="{{ url_for('static', filename='assets/favicon.ico') }}">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
   <title>{% block title %}{% endblock %}</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
-      <!-- Load the jQuery library first -->
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
 </head>
 
 <body>
-
   {{ navbar() }}
-
-<div class="content-wrapper">
-  <main>
-    {% block content %}{% endblock %}
-  </main>
-</div>
-
-</body>
-<!-- Footer-->
-<footer>
-  <p>&copy; 2024 Nijenge. All rights reserved.</p>
-  <div class="theme-toggle-container">
-    <label for="theme-toggle" class="theme-toggle-label">
-      <input type="checkbox" id="theme-toggle" class="theme-toggle">
-      Toggle Dark Mode
-    </label>
+  <div class="content-wrapper">
+    <main>
+      {% block content %}{% endblock %}
+    </main>
   </div>
-</footer>
 
-<script src="/static/js/theme-toggle.js"></script>
-<script src="{{ url_for('static', filename='js/html2canvas.min.js') }}"></script>
+  <!-- Footer-->
+  <footer>
+    <p>&copy; 2024 Nijenge. All rights reserved.</p>
+    <div class="theme-toggle-container">
+      <label for="theme-toggle" class="theme-toggle-label">
+        <input type="checkbox" id="theme-toggle" class="theme-toggle">
+        Toggle Dark Mode
+      </label>
+    </div>
+  </footer>
+
+  <!-- Load scripts at the end of the body -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="{{ url_for('static', filename='js/html2canvas.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/theme-toggle.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/Toastr.js') }}"></script>
+  {% block scripts %}{% endblock %}
 </body>
 
 </html>

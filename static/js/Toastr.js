@@ -1,31 +1,80 @@
 document.addEventListener("DOMContentLoaded", function () {
-  const updateButton = document.getElementById("update-button");
-  const messageInput = document.getElementById("message");
-  const fundraiserIdInput = document.getElementById("fundraiserId");
-
-  updateButton.addEventListener("click", function (event) {
-    event.preventDefault(); // Prevent the form from submitting normally
-
-    const message = messageInput.value;
-    const fundraiserId = fundraiserIdInput.value;
-
-    saveContribution(fundraiserId, message);
+  // Fetch and display initial flash messages (if any)
+  $(document).ready(function () {
+    const flashMessage = getFlashMessageFromCookie();
+    console.log("Flash message from cookie:", flashMessage); // Debug print
+    if (flashMessage) {
+      toastr.success(flashMessage);
+      clearFlashMessageCookie(); // Clear the cookie immediately after displaying the message
+    } else {
+      console.log("No flash message found in cookie.");
+    }
   });
 
+  function getFlashMessageFromCookie() {
+    const cookies = document.cookie.split(";");
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim();
+      if (cookie.startsWith("flash_message=")) {
+        return decodeURIComponent(
+          cookie.substring("flash_message=".length, cookie.length)
+        );
+      }
+    }
+    return null;
+  }
+
+  function clearFlashMessageCookie() {
+    document.cookie =
+      "flash_message=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+  }
+
+  // Function to save contributions and handle flash messages
   function saveContribution(fundraiserId, message) {
-    $.post("/fundraiser_success/" + fundraiserId, {
-      message: message,
-    })
-      .done(function (response) {
+    console.log("Fundraiser ID:", fundraiserId);
+    console.log("Message:", message);
+
+    if (!fundraiserId || !message) {
+      toastr.error("Fundraiser ID or message is missing");
+      return;
+    }
+
+    $.ajax({
+      type: "POST",
+      url: "/fundraiser_success/" + fundraiserId,
+      data: { message: message },
+      success: function (response) {
         if (response.status === "success") {
-          toastr.success(response.message);
-          $("#message").val(""); // Clear the text area
+          // Set a cookie with the flash message
+          document.cookie = `flash_message=${response.message}; path=/`;
+          toastr.success(response.message); // Display the notification
+          // Clear the textarea and optionally update the contributions table
+          const messageInput = document.getElementById("message");
+          if (messageInput) {
+            messageInput.value = "";
+          }
+          // Clear the cookie after setting it
+          clearFlashMessageCookie();
         } else {
           toastr.error(response.message);
         }
-      })
-      .fail(function (xhr, status, error) {
-        toastr.error("Error saving contribution");
-      });
+      },
+      error: function (xhr, status, error) {
+        toastr.error("Error saving contribution: " + error);
+      },
+    });
+  }
+
+  // Example usage of saveContribution
+  const updateButton = document.getElementById("update-button");
+  if (updateButton) {
+    updateButton.addEventListener("click", function (event) {
+      event.preventDefault();
+      const fundraiserIdInput = document.getElementById("fundraiser-id");
+      const fundraiserId = fundraiserIdInput ? fundraiserIdInput.value : null;
+      const messageInput = document.getElementById("message");
+      const message = messageInput ? messageInput.value : null;
+      saveContribution(fundraiserId, message);
+    });
   }
 });

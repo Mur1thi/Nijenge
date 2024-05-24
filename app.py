@@ -128,6 +128,20 @@ def send_mail(subject, recipient, body):
         smtp.login(mail_username, password)
         smtp.send_message(msg)
 
+from flask import request, get_flashed_messages, flash, make_response, redirect, url_for
+
+
+@app.route("/messages")
+def get_messages():
+    messages = get_flashed_messages(with_categories=True)
+
+    if not messages:
+        flash_message = request.cookies.get("flash_message")
+        if flash_message:
+            messages = [("success", flash_message)]
+
+    return jsonify(messages=messages)
+
 
 @app.route("/logout")
 def logout():
@@ -139,6 +153,12 @@ def logout():
 
     # Redirect to the login page or another appropriate route
     return redirect(url_for("index"))
+
+
+from flask import flash, make_response, redirect, url_for
+
+
+from flask import flash, make_response, redirect, url_for
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -153,18 +173,26 @@ def login():
             if user and check_password_hash(user.password, password):
                 session["user_id"] = user.id
                 session["username"] = user.username  # Store the username in the session
-                name = user.username.split("@")[0]  # Extract the name before the '@' sign
+                name = user.username.split("@")[
+                    0
+                ]  # Extract the name before the '@' sign
                 session["name"] = name  # Store the name in the session
                 g.user = user  # Assign user to g for access in other routes
-                return redirect(url_for("index"))  # 'index' is the main page
-            else:
-                return error(
-                    "Invalid username or password", 400
-                )  # Provide informative error message
-        except Exception as e:
-            return error(str(e), 500)  # Handling general errors
+                flash("Login successful", "success")
 
-    return render_template("login.html")  # Render login form for GET requests
+                # Redirect to index on successful login
+                response = make_response(redirect(url_for("index")))
+                response.set_cookie("flash_message", "Login successful", path="/")
+                return response
+
+            else:
+                flash("Invalid username or password", "error")
+        except Exception as e:
+            flash(str(e), "error")
+
+        return render_template("login.html")
+
+    return render_template("login.html")
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -347,7 +375,9 @@ def save_contribution(fundraiser_id):
         contribution_time = re.search(r"at (\d{1,2}:\d{2} (?:AM|PM))", message)
         if not contribution_time:
             return error("Invalid contribution time", 400)
-        contribution_time = datetime.strptime(contribution_time.group(1), "%I:%M %p").time()
+        contribution_time = datetime.strptime(
+            contribution_time.group(1), "%I:%M %p"
+        ).time()
 
         contribution = Contribution(
             fundraiser_id=fundraiser_id,
@@ -375,14 +405,17 @@ def save_contribution(fundraiser_id):
                     "amount": amount,
                     "contributor_name": contributor_name,
                     "phone_number": phone_number,
-                    "contribution_date": contribution_date,
-                    "contribution_time": contribution_time,
+                    "contribution_date": contribution_date.strftime("%Y-%m-%d"),
+                    "contribution_time": contribution_time.strftime(
+                        "%H:%M:%S"
+                    ),  # Convert time to string
                 },
             }
         )
 
     else:
         return render_template("fundraiser_success.html", fundraiser=fundraiser)
+
 
 # Route to handle AJAX requests for fetching contributions
 @app.route("/report_index")
