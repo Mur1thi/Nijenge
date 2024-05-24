@@ -3,8 +3,6 @@
 {% block title %}Fundraiser Report{% endblock %}
 
 {% block content %}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.13/jspdf.plugin.autotable.min.js"></script>
 <script>
   const fundraiser = {
     name: "{{ fundraiser.name }}",
@@ -15,15 +13,12 @@
   };
 </script>
 <script src="/static/js/report.js" type="module"></script>
-<!-- Include jsPDF and jsPDF-AutoTable from node_modules -->
-<script src="{{ url_for('static', filename='js/jspdf.umd.min.js') }}"></script>
-<script src="{{ url_for('static', filename='js/jspdf.plugin.autotable.js') }}"></script>
-<div class="container">
+<div class="container mt-5">
   <input type="hidden" id="fundraiser-id" value="{{ fundraiser.id }}">
 
-  <h1>Report</h1>
+  <h1 class="mb-4">Report</h1>
 
-  <div class="card">
+  <div class="card mb-4">
     <div class="card-body">
       <h4 class="card-title">{{ fundraiser.name }}</h4>
       <p class="card-text">{{ fundraiser.description }}</p>
@@ -35,7 +30,7 @@
     </div>
   </div>
 
-  <h2>Fundraiser Report</h2>
+  <h2 class="mb-4">Fundraiser Report</h2>
 
   <table id="contributions-table" class="table table-bordered table-striped">
     <thead>
@@ -51,9 +46,9 @@
     <tbody id="contributions-table-body"></tbody>
   </table>
 
-  <div id="pagination-controls">
+  <div id="pagination-controls" class="my-4">
     <button id="prev-page" class="btn btn-primary">Previous</button>
-    <span id="page-info"></span>
+    <span id="page-info" class="mx-2"></span>
     <button id="next-page" class="btn btn-primary">Next</button>
   </div>
 

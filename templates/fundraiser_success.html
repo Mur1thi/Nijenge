@@ -3,13 +3,11 @@
 {% block title %}Fundraiser Created{% endblock %}
 
 {% block content %}
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+<div class="container mt-5">
 
-<div class="container">
+  <h1 class="mb-4">Fundraiser</h1>
 
-  <h1>Fundraiser</h1>
-
-  <div class="card">
+  <div class="card mb-4">
     <div class="card-body">
       <h4 class="card-title">{{ fundraiser.name }}</h4>
       <p class="card-text">{{ fundraiser.description }}</p>
@@ -20,12 +18,13 @@
       </p>
     </div>
   </div>
-  <h2>Update Message</h2>
+
+  <h2 class="mb-4">Update Message</h2>
 
   <form method="POST" id="update-form">
     <input type="hidden" id="fundraiser-id" name="fundraiser_id" value="{{ fundraiser.id }}">
 
-    <div class="form-group">
+    <div class="form-group mb-3">
       <label for="message">Message:</label>
       <textarea class="form-control" id="message" name="message" rows="5"></textarea>
     </div>
