@@ -3,7 +3,14 @@
 {% block title %}Register{% endblock %}
 
 {% block content %}
-<div class="container d-flex flex-column justify-content-center align-items-center min-vh-100">
+<style>
+  
+  footer {
+    bottom: 0;
+  }
+</style>
+
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh; padding-top: 60px;">
   <div class="col-md-6 col-lg-4">
     <h1 class="text-center">Register</h1>
     <form method="POST" action="/register">

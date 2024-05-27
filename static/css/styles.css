@@ -154,8 +154,9 @@
 *::after {
   box-sizing: border-box;
 }
-
+  
 footer {
+  position:absolute;
   padding: 1em;
   text-align: center;
   background: var(--card-background-color);
@@ -164,6 +165,7 @@ footer {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  width: 100%;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -193,6 +195,10 @@ footer {
 @media (max-width: 768px) {
   #contributions-table {
     /* Adjust font size, column widths, etc. */
+    #contributions-table {
+      background-color: #f2f2f2;
+      padding: 10px;
+    }
   }
 }
 
