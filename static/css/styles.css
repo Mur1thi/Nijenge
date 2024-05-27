@@ -156,7 +156,7 @@
 }
   
 footer {
-  position:absolute;
+  position: absolute;
   padding: 1em;
   text-align: center;
   background: var(--card-background-color);
