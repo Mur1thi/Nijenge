@@ -28,7 +28,7 @@
             <a class="btn btn-lg btn-light me-2" href="/fundraiser">Fundraiser</a>
             <a class="btn btn-lg btn-light" href="{{ url_for('report_index') }}">Reports</a>
             {% else %}
-            <a class="btn btn-lg btn-light me-2" href="/register">Register</a>
+            <button class="btn btn-lg btn-light me-2" id="register-btn">Register</a>
             <button class="btn btn-lg btn-light" id="login-btn">Login</button>
             {% endif %}
         </div>
@@ -85,14 +85,41 @@
         <h2>Login</h2>
         <form method="POST" action="/login">
             <div class="form-group">
-                <label for="username">Username:</label>
-                <input type="text" class="form-control" id="username" name="username" required>
+                <label for="login-username">Username:</label>
+                <input type="text" class="form-control" id="login-username" name="username" required>
             </div>
             <div class="form-group">
-                <label for="password">Password:</label>
-                <input type="password" class="form-control" id="password" name="password" required>
+                <label for="login-password">Password:</label>
+                <input type="password" class="form-control" id="login-password" name="password" required>
             </div>
             <button type="submit" class="btn btn-primary">Login</button>
+        </form>
+    </div>
+</div>
+<!-- Register Modal -->
+<div id="registerModal" class="modal">
+    <div class="modal-content">
+        <span class="close register-close">&times;</span>
+        <h2>Register</h2>
+        <form method="POST" action="/register">
+            <div class="form-group">
+                <label for="register-email">Email Address:</label>
+                <input type="email" class="form-control" id="register-email" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="register-phone">Phone Number:</label>
+                <input type="tel" class="form-control" id="register-phone" name="phone" pattern="^\+254\d{9}$" required>
+            </div>
+            <div class="form-group">
+                <label for="register-password">Password:</label>
+                <input type="password" class="form-control" id="register-password" name="password" required>
+            </div>
+            <div class="form-group">
+                <label for="register-confirm-password">Confirm Password:</label>
+                <input type="password" class="form-control" id="register-confirm-password" name="confirm_password"
+                    required>
+            </div>
+            <button type="submit" class="btn btn-primary">Register</button>
         </form>
     </div>
 </div>

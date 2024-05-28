@@ -114,15 +114,14 @@
   max-width: 500px;
 }
 
-.close {
+.close, .register-close {
   color: #aaa;
   float: right;
   font-size: 28px;
   font-weight: bold;
 }
 
-.close:hover,
-.close:focus {
+.close:hover, .close:focus, .register-close:hover, .register-close:focus {
   color: black;
   text-decoration: none;
   cursor: pointer;
