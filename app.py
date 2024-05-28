@@ -263,6 +263,10 @@ def fundraiser():
         return create_fundraiser()
 
 
+from flask import flash
+
+
+@app.route("/create_fundraiser", methods=["GET", "POST"])
 def create_fundraiser():
     if request.method == "POST":
         name = request.form["name"]
@@ -275,10 +279,11 @@ def create_fundraiser():
             # Check if user already has an active fundraiser
             user_fundraiser = Fundraiser.query.filter_by(user_id=g.user.id).first()
             if user_fundraiser:
-                return error(
+                flash(
                     "You already have an active fundraiser. Please complete or cancel it before creating a new one.",
-                    400,
+                    "error",
                 )
+                return redirect(url_for("create_fundraiser"))
 
             # Create the new fundraiser
             new_fundraiser = Fundraiser(
@@ -291,13 +296,18 @@ def create_fundraiser():
             db.session.add(new_fundraiser)
             db.session.commit()
 
+            flash("Fundraiser created successfully!", "success")
             return redirect(
                 url_for("fundraiser_success", fundraiser_id=new_fundraiser.id)
             )  # Redirect to success page
 
         except Exception as e:
-            logging.error(str(e)) # Works like console.log
-            return error(str(e), 500)  # Handle any errors
+            logging.error(str(e))  # Works like console.log
+            flash(
+                "An error occurred while creating the fundraiser. Please try again.",
+                "error",
+            )
+            return redirect(url_for("create_fundraiser"))
 
     # Render the form for GET requests
     # Retrieve the fundraiser object
@@ -438,6 +448,7 @@ def report_index():
     """
     fundraiser_id = has_active_fundraiser()
     if fundraiser_id is None:
+        flash("Please create a fundraiser first", "error")
         return redirect(url_for("fundraiser"))
 
     fundraiser = Fundraiser.query.get_or_404(fundraiser_id)  # Fetch the fundraiser

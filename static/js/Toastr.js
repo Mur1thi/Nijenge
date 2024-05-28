@@ -1,3 +1,5 @@
+// Initialize Toastr
+// Example usage of saveContribution
 document.addEventListener("DOMContentLoaded", function () {
   // Fetch and display initial flash messages (if any)
   const flashMessage = getFlashMessageFromCookie();
@@ -8,6 +10,7 @@ document.addEventListener("DOMContentLoaded", function () {
     console.log("No flash message found in cookie.");
   }
 
+  // Function to get the flash message from the cookie
   function getFlashMessageFromCookie() {
     const cookies = document.cookie.split(";");
     for (let i = 0; i < cookies.length; i++) {

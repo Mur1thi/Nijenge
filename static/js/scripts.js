@@ -37,6 +37,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
     registerModal.style.display = "none";
   };
 
+
   // When the user clicks anywhere outside of the modal, close it
   window.onclick = function (event) {
     if (event.target == loginModal) {
@@ -48,6 +49,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 });
 
 // index.html contact form
+// Activate Bootstrap scrollspy on the main nav element
 window.addEventListener("DOMContentLoaded", (event) => {
   // Activate Bootstrap scrollspy on the main nav element
   const mainNav = document.body.querySelector("#mainNav");
@@ -72,6 +74,8 @@ window.addEventListener("DOMContentLoaded", (event) => {
   });
 });
 
+// contact form
+// Add an event listener to the form
 document.addEventListener("DOMContentLoaded", function () {
   var contactForm = document.getElementById("contactForm");
 
@@ -116,6 +120,8 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 
+// Fundraiser success
+// Add an event listener to the form
 $(document).ready(function () {
   $("#update-button").click(function (event) {
     event.preventDefault(); // Prevent the form from submitting normally
