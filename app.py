@@ -152,6 +152,7 @@ def logout():
     session.pop("name", None)  # Remove the name from the session
 
     # Redirect to the login page or another appropriate route
+    flash("You have been logged out", "info")
     return redirect(url_for("index"))
 
 
@@ -213,8 +214,10 @@ def register():
         db.session.add(new_user)
         db.session.commit()
 
+        flash("Registration successful", "success")
         return redirect(url_for("login"))
 
+    flash("Registration form", "info")
     return render_template("register.html")
 
 
@@ -448,7 +451,7 @@ def report_index():
     """
     fundraiser_id = has_active_fundraiser()
     if fundraiser_id is None:
-        flash("Please create a fundraiser first", "error")
+        flash("Please create a fundraiser first", "warning")
         return redirect(url_for("fundraiser"))
 
     fundraiser = Fundraiser.query.get_or_404(fundraiser_id)  # Fetch the fundraiser
