@@ -1,3 +1,4 @@
+
 document.addEventListener("DOMContentLoaded", function () {
   // Fetch and display initial flash messages (if any)
   const flashMessage = getFlashMessageFromCookie();

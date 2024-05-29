@@ -120,7 +120,7 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 
-// Fundraiser success
+// Fundraiser_success
 // Add an event listener to the form
 $(document).ready(function () {
   $("#update-button").click(function (event) {

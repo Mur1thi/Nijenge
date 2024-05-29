@@ -11,12 +11,14 @@
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  */
 :root {
-  --background-color: #ffffff;
-  --text-color: #000000;
-  --card-background-color: #f8f9fa;
-  --button-background-color: #007bff;
-  --button-text-color: #ffffff;
-  --footer-height: 65px;  /* Adjust this to your preferred height */
+  --background-light: #f8f9fa;
+  --background-dark: #121212;
+  --text-light: #ffffff;
+  --text-dark: #000000;
+  --card-background-light: #ffffff;
+  --card-background-dark: #1e1e1e;
+
+  --footer-height: 65px;
   --bs-blue: #0d6efd;
   --bs-indigo: #6610f2;
   --bs-purple: #6f42c1;
@@ -90,6 +92,36 @@
   --bs-highlight-bg: #fff3cd;
 }
 
+/* Dark Theme Overrides */
+[data-theme="dark"] {
+  --background-light: #1a1a1a;
+  --background-dark: #333333;
+  --text-light: #ffffff;
+  --text-dark: #f0f0f0;
+  --card-background-light: #1e1e1e;
+  --card-background-dark: #1e1e1e;
+  --button-background: #4caf50;
+  --button-text-color: #ffffff;
+}
+
+body {
+  background-color: var(--background-light);
+  color: var(--text-dark);
+}
+
+[data-theme="dark"] body {
+  background-color: var(--background-dark);
+  color: var(--text-light);
+}
+
+.card {
+  background-color: var(--card-background-light);
+}
+
+[data-theme="dark"] .card {
+  background-color: var(--card-background-dark);
+}
+
 /* Modal styles */
 .modal {
   display: none;
@@ -100,18 +132,21 @@
   width: 100%;
   height: 100%;
   overflow: auto;
-  background-color: rgb(0, 0, 0);
   background-color: rgba(0, 0, 0, 0.4);
   padding-top: 60px;
 }
 
 .modal-content {
-  background-color: #fefefe;
+  background-color: var(--card-background-light);
   margin: 5% auto;
   padding: 20px;
   border: 1px solid #888;
   width: 80%;
   max-width: 500px;
+}
+
+[data-theme="dark"] .modal-content {
+  background-color: var(--card-background-dark);
 }
 
 .close, .register-close {
@@ -122,12 +157,54 @@
 }
 
 .close:hover, .close:focus, .register-close:hover, .register-close:focus {
-  color: black;
+  color: #000;
   text-decoration: none;
   cursor: pointer;
 }
 
+[data-theme="dark"] .close,
+[data-theme="dark"] .register-close {
+  color: #f0f0f0;
+}
 
+[data-theme="dark"] .close:hover,
+[data-theme="dark"] .close:focus,
+[data-theme="dark"] .register-close:hover,
+[data-theme="dark"] .register-close:focus {
+  color: #fff;
+}
+
+/* Input Fields */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="tel"],
+textarea {
+  background-color: var(--background-light);
+  color: var(--text-dark);
+  border: 1px solid #ccc;
+}
+
+[data-theme="dark"] input[type="text"],
+[data-theme="dark"] input[type="email"],
+[data-theme="dark"] input[type="password"],
+[data-theme="dark"] input[type="tel"],
+[data-theme="dark"] textarea {
+  background-color: var(--background-dark);
+  color: var(--text-light);
+  border: 1px solid #555;
+}
+
+/* Password input asterisk color */
+input[type="password"]::placeholder {
+  color: var(--text-dark);
+}
+
+[data-theme="dark"] input[type="password"]::placeholder {
+  color: var(--text-light);
+}
+
+/* Theme Toggle */
 .theme-toggle-label {
   display: flex;
   align-items: center;
@@ -143,15 +220,6 @@
   margin-left: 10px;
 }
 
-[data-theme="dark"] {
-  --background-color: #121212;
-  --text-color: #ffffff;
-  --card-background-color: #1e1e1e;
-  --button-background-color: #4caf50;
-  --button-text-color: #ffffff;
-  --footer-height: 65px;  /* Adjust this to your preferred height */
-}
-
 .toggle-switch {
   display: flex;
   align-items: center;
@@ -162,7 +230,7 @@
   width: 40px;
   height: 20px;
   appearance: none;
-  background-color: var(--card-background-color);
+  background-color: var(--card-background-dark);
   border-radius: 20px;
   position: relative;
   outline: none;
@@ -174,7 +242,7 @@
   content: '';
   width: 18px;
   height: 18px;
-  background-color: var(--button-background-color);
+  background-color: var(--button-background);
   border-radius: 50%;
   position: absolute;
   top: 1px;
@@ -259,7 +327,7 @@ body {
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Poppins', sans-serif;
   }
-  .navbar-brand, .nav-link, .btn, .card-title, .card-text, .form-control, .btn-primary, .btn-light {
+  .navbar-brand, .nav-link, .btn, .card-title, .card-text, .form-control, .btn-primary, .btn.disabled , .btn-light {
     font-family: 'Poppins', sans-serif;
   }
       
