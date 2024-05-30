@@ -185,8 +185,10 @@ def login():
                 return redirect(url_for("index"))
             else:
                 flash("Invalid username or password", "error")
+                return redirect(url_for("index", login_error="true"))
         except Exception as e:
             flash(str(e), "error")
+            return redirect(url_for("index", login_error="true"))
 
     return render_template("login.html")
 

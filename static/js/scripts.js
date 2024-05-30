@@ -37,7 +37,6 @@ document.addEventListener("DOMContentLoaded", (event) => {
     registerModal.style.display = "none";
   };
 
-
   // When the user clicks anywhere outside of the modal, close it
   window.onclick = function (event) {
     if (event.target == loginModal) {
@@ -46,6 +45,12 @@ document.addEventListener("DOMContentLoaded", (event) => {
       registerModal.style.display = "none";
     }
   };
+
+  // Check if the URL contains the login_error parameter
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.has("login_error")) {
+    loginModal.style.display = "block";
+  }
 });
 
 // index.html contact form
