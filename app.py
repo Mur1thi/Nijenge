@@ -197,19 +197,27 @@ def login():
 def register():
     if request.method == "POST":
         username = request.form["username"]
+        phone = request.form["phone"]
         password = request.form["password"]
         confirm_password = request.form["confirm_password"]
 
+        # Email verification check
+        if User.query.filter_by(username=username).first():
+            flash("Email already exists. Please use a different email.", "error")
+            return redirect(url_for("index") + "#register-error")
+
         # Password validation
         if not password or not confirm_password:
-            return error("Password and confirmation password are required", 400)
+            flash("Password and confirmation password are required", "error")
+            return redirect(url_for("index") + "#register-error")
         if password != confirm_password:
-            return error("Passwords do not match", 400)
+            flash("Passwords do not match", "error")
+            return redirect(url_for("index") + "#register-error")
 
         # Hash the password before storing
         hashed_password = generate_password_hash(password)
 
-        # Rest of your registration logic
+        # Registration logic
         new_user = User()
         new_user.username = username
         new_user.password = hashed_password
@@ -217,9 +225,8 @@ def register():
         db.session.commit()
 
         flash("Registration successful", "success")
-        return redirect(url_for("login"))
+        return redirect(url_for("index"))
 
-    flash("Registration form", "info")
     return render_template("register.html")
 
 

@@ -50,33 +50,13 @@ document.addEventListener("DOMContentLoaded", (event) => {
   const urlParams = new URLSearchParams(window.location.search);
   if (urlParams.has("login_error")) {
     loginModal.style.display = "block";
+    toastr.error("Invalid username or password");
   }
-});
-
-// index.html contact form
-// Activate Bootstrap scrollspy on the main nav element
-window.addEventListener("DOMContentLoaded", (event) => {
-  // Activate Bootstrap scrollspy on the main nav element
-  const mainNav = document.body.querySelector("#mainNav");
-  if (mainNav) {
-    new bootstrap.ScrollSpy(document.body, {
-      target: "#mainNav",
-      rootMargin: "0px 0px -40%",
-    });
+  // Check if the URL contains the register_error parameter
+  if (urlParams.has("register_error")) {
+    registerModal.style.display = "block";
+    toastr.error("An error occurred during registration");
   }
-
-  // Collapse responsive navbar when toggler is visible
-  const navbarToggler = document.body.querySelector(".navbar-toggler");
-  const responsiveNavItems = [].slice.call(
-    document.querySelectorAll("#navbarResponsive .nav-link")
-  );
-  responsiveNavItems.map(function (responsiveNavItem) {
-    responsiveNavItem.addEventListener("click", () => {
-      if (window.getComputedStyle(navbarToggler).display !== "none") {
-        navbarToggler.click();
-      }
-    });
-  });
 });
 
 // contact form
