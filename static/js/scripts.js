@@ -50,7 +50,6 @@ document.addEventListener("DOMContentLoaded", (event) => {
   const urlParams = new URLSearchParams(window.location.search);
   if (urlParams.has("login_error")) {
     loginModal.style.display = "block";
-    toastr.error("Invalid username or password");
   }
   // Check if the URL contains the register_error parameter
   if (urlParams.has("register_error")) {
