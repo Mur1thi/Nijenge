@@ -511,5 +511,37 @@ def report(fundraiser_id):
         )
 
 
+@app.route("/delete_fundraiser", methods=["POST"])
+def delete_fundraiser():
+    if "user_id" not in session:
+        return jsonify(success=False, message="User not logged in.")
+
+    user_id = session["user_id"]
+    fundraiser = Fundraiser.query.filter_by(user_id=user_id).first()
+
+    if not fundraiser:
+        return jsonify(success=False, message="No active fundraiser found.")
+
+    try:
+        # Download contribution data before deleting (implement your own logic here)
+        contributions = Contribution.query.filter_by(fundraiser_id=fundraiser.id).all()
+        # Implement download logic, e.g., generate CSV and return as download
+
+        # Delete contributions
+        for contribution in contributions:
+            db.session.delete(contribution)
+
+        # Delete fundraiser
+        db.session.delete(fundraiser)
+        db.session.commit()
+
+        return jsonify(
+            success=True, message="Fundraiser and contributions deleted successfully."
+        )
+    except Exception as e:
+        db.session.rollback()
+        return jsonify(success=False, message=str(e))
+
+
 if __name__ == "__main__":
     app.run(debug=True)

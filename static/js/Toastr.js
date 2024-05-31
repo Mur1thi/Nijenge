@@ -22,58 +22,10 @@ document.addEventListener("DOMContentLoaded", function () {
     return null;
   }
 
+  // Function to clear the flash message cookie
   function clearFlashMessageCookie() {
     document.cookie =
       "flash_message=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-  }
-
-  // Function to save contributions and handle flash messages
-  function saveContribution(fundraiserId, message) {
-    console.log("Fundraiser ID:", fundraiserId);
-    console.log("Message:", message);
-
-    if (!fundraiserId || !message) {
-      toastr.error("Fundraiser ID or message is missing");
-      return;
-    }
-
-    $.ajax({
-      type: "POST",
-      url: "/fundraiser_success/" + fundraiserId,
-      data: { message: message },
-      success: function (response) {
-        if (response.status === "success") {
-          // Set a cookie with the flash message
-          document.cookie = `flash_message=${response.message}; path=/`;
-          toastr.success(response.message); // Display the notification
-          // Clear the textarea and optionally update the contributions table
-          const messageInput = document.getElementById("message");
-          if (messageInput) {
-            messageInput.value = "";
-          }
-          // Clear the cookie after setting it
-          clearFlashMessageCookie();
-        } else {
-          toastr.error(response.message);
-        }
-      },
-      error: function (xhr, status, error) {
-        toastr.error("Error saving contribution: " + error);
-      },
-    });
-  }
-
-  // Example usage of saveContribution
-  const updateButton = document.getElementById("update-button");
-  if (updateButton) {
-    updateButton.addEventListener("click", function (event) {
-      event.preventDefault();
-      const fundraiserIdInput = document.getElementById("fundraiser-id");
-      const fundraiserId = fundraiserIdInput ? fundraiserIdInput.value : null;
-      const messageInput = document.getElementById("message");
-      const message = messageInput ? messageInput.value : null;
-      saveContribution(fundraiserId, message);
-    });
   }
 
   // Fetch flash messages from the server
