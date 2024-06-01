@@ -53,39 +53,44 @@ document.addEventListener("DOMContentLoaded", (event) => {
   const toggleDarkModeBtn = document.getElementById("toggleDarkMode");
   const deleteFundraiserBtn = document.getElementById("deleteFundraiser");
 
-  // Toggle dark mode
-  if (toggleDarkModeBtn) {
-    toggleDarkModeBtn.onclick = function () {
-      const themeToggle = document.getElementById("theme-toggle");
-      if (themeToggle) {
-        themeToggle.checked = !themeToggle.checked;
-        themeToggle.dispatchEvent(new Event("change"));
-      }
-    };
-  }
-
-  // Delete fundraiser
-  if (deleteFundraiserBtn) {
-    deleteFundraiserBtn.onclick = function () {
-      if (confirm("Are you sure you want to end and delete your fundraiser?")) {
-        fetch("/delete_fundraiser", {
-          method: "POST",
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            if (data.status === "success") {
-              toastr.success(data.message);
-              window.location.href = "/";
-            } else {
-              toastr.error(data.message);
+    // Dark mode toggle
+    const toggleDarkMode = document.getElementById('toggleDarkMode');
+    if (toggleDarkMode) {
+        toggleDarkMode.addEventListener('click', function() {
+            const themeToggle = document.getElementById('theme-toggle');
+            if (themeToggle) {
+                themeToggle.checked = !themeToggle.checked;
+                const event = new Event('change');
+                themeToggle.dispatchEvent(event);
             }
-          })
-          .catch((error) => {
-            toastr.error("An error occurred: " + error);
-          });
-      }
-    };
-  }
+        });
+    }
+
+    // Delete fundraiser functionality
+    const deleteFundraiser = document.getElementById('deleteFundraiser');
+    if (deleteFundraiser) {
+        deleteFundraiser.addEventListener('click', function() {
+            if (confirm('Are you sure you want to delete your fundraiser?')) {
+                // Make a request to the server to delete the fundraiser
+                fetch('/delete_fundraiser', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }).then(response => {
+                    if (response.ok) {
+                        toastr.success('Fundraiser deleted successfully.');
+                        window.location.href = '/';
+                    } else {
+                        toastr.error('Failed to delete fundraiser.');
+                    }
+                }).catch(error => {
+                    console.error('Error:', error);
+                    toastr.error('An error occurred.');
+                });
+            }
+        });
+    }
 });
 
 // Function to save contributions and handle flash messages

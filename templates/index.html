@@ -6,7 +6,7 @@
 
 <!-- Header-->
 <header class="bg-primary bg-gradient text-white d-flex flex-column justify-content-center" style="height: 100vh;">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"
         integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
@@ -25,6 +25,7 @@
             {% if session.user_id %}
             <a class="btn btn-lg btn-light me-2" href="/fundraiser">Fundraiser</a>
             <a class="btn btn-lg btn-light" href="{{ url_for('report_index') }}">Reports</a>
+            
             {% else %}
             <button class="btn btn-lg btn-light me-2" id="register-btn">Register</a>
             <button class="btn btn-lg btn-light" id="login-btn">Login</button>
