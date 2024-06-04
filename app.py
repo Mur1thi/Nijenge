@@ -1,5 +1,5 @@
 import json
-import math
+import logging
 import os
 import secrets
 from pathlib import Path
@@ -30,6 +30,9 @@ from models import (
     Contribution,
 )
 from models import db
+
+# Configure logging to write to a file
+logging.basicConfig(filename="Nijenge_app.log", level=logging.DEBUG)
 
 
 # Load environment variables from .env file
@@ -75,6 +78,7 @@ def index():
 
 @app.route("/contact", methods=["POST"])
 def contact():
+    logging.info("Received contact form submission")
     print("From app.py", request.form)  # Print the entire form data
 
     name = request.form.get("name")
@@ -90,6 +94,7 @@ def contact():
         errors.append("Please fill in the message field")
 
     if errors:
+        logging.warning("Contact form submission with errors: %s", errors)
         return jsonify({"status": "error", "message": "\n".join(errors)})
 
     # Send the email
@@ -101,11 +106,13 @@ def contact():
         send_mail(subject, recipient, body)  # Call the send_mail function
 
         # Email sent successfully, return success response
+        logging.info("Contact email sent successfully to %s", recipient)
         return jsonify({"status": "success", "message": "Email sent successfully!"})
 
     except Exception as e:
+        logging.error(f"An error occurred while sending the email: {str(e)}")
         # Return error response with Toastr notification
-        return jsonify({"status": "error", "message": f"An error occurred: {str(e)}"})
+        return jsonify({"status": "error", "message": f"An error occurred while sending the email"})
 
 
 # Create a secure SMTP connection for sending emails
