@@ -267,6 +267,18 @@ def register():
 
     return render_template("register.html")
 
+from flask import g, session
+from models import User
+
+
+@app.before_request
+def load_user():
+    user_id = session.get("user_id")
+    if user_id:
+        g.user = User.query.get(user_id)
+    else:
+        g.user = None
+
 
 @app.route("/fundraiser", methods=["GET", "POST"])
 @login_required  # Decorator to check for login status
@@ -562,6 +574,25 @@ def save_contribution(fundraiser_id):
 @app.route("/report_index")
 @login_required
 def report_index():
+    """
+    A route handler for the "/report_index" URL. This function is decorated with the `@login_required` decorator,
+    which means that the user must be logged in to access this route.
+    
+    The function checks if the user has an active fundraiser by calling the `has_active_fundraiser()` function.
+    If the user has an active fundraiser, the function retrieves the fundraiser object using the `Fundraiser.query.get_or_404()`
+    method and assigns it to the `fundraiser` variable. If the `fundraiser` is not `None`, the function logs
+    the fundraiser ID and redirects the user to the "report" route with the fundraiser ID and page number as parameters.
+    If the `fundraiser` is `None`, the function logs a warning message and redirects the user to the "fundraiser" route.
+    
+    If an exception occurs during the execution of the function, the function logs an error message and redirects
+    the user to the "fundraiser" route.
+    
+    Returns:
+        - If the user has an active fundraiser, the function redirects the user to the "report" route with the fundraiser ID
+          and page number as parameters.
+        - If the user does not have an active fundraiser, the function redirects the user to the "fundraiser" route.
+        - If an exception occurs, the function redirects the user to the "fundraiser" route.
+    """
     try:
         fundraiser_id = has_active_fundraiser()
         if fundraiser_id is None:
@@ -586,6 +617,33 @@ def report_index():
 @app.route("/report/<int:fundraiser_id>")
 @login_required
 def report(fundraiser_id):
+    """
+A route handler for the "/report/<int:fundraiser_id>" URL. This function is decorated with the `@login_required` decorator,
+which means that the user must be logged in to access this route.
+
+The function fetches all contributions for a specific fundraiser using the `fundraiser_id` parameter. It then converts the
+contributions into a list of dictionaries, where each dictionary contains information about the contribution, such as the
+reference, name, amount, date, time, and timestamp. The function also logs a message indicating that contributions have
+been fetched for the specified fundraiser.
+
+If the query parameter `format` is set to "json", the function returns a JSON response containing the contributions as a
+list of dictionaries. Otherwise, the function renders the "report.html" template with the fundraiser object and the
+contributions as parameters.
+
+If an exception occurs during the execution of the function, the function logs an error message, displays an error flash
+message, and redirects the user to the "fundraiser" route.
+
+Parameters:
+    - fundraiser_id (int): The ID of the fundraiser for which contributions are being fetched.
+
+Returns:
+    - If the query parameter `format` is set to "json", the function returns a JSON response containing the contributions
+        as a list of dictionaries.
+    - If the query parameter `format` is not set or is set to any other value, the function renders the "report.html"
+        template with the fundraiser object and the contributions as parameters.
+    - If an exception occurs, the function logs an error message, displays an error flash message, and redirects the user
+        to the "fundraiser" route.
+"""
     try:
         # Fetch all contributions for the fundraiser
         fundraiser = Fundraiser.query.get_or_404(fundraiser_id)
@@ -624,36 +682,47 @@ def report(fundraiser_id):
         return redirect(url_for("fundraiser"))
 
 
+
 @app.route("/delete_fundraiser", methods=["POST"])
 def delete_fundraiser():
     if "user_id" not in session:
+        logging.warning("Attempt to delete fundraiser without being logged in.")
         return jsonify(success=False, message="User not logged in.")
 
     user_id = session["user_id"]
     fundraiser = Fundraiser.query.filter_by(user_id=user_id).first()
 
     if not fundraiser:
+        logging.warning("No active fundraiser found for user ID %s.", user_id)
         return jsonify(success=False, message="No active fundraiser found.")
 
     try:
-        # Download contribution data before deleting (implement your own logic here)
+        # Fetch contributions
         contributions = Contribution.query.filter_by(fundraiser_id=fundraiser.id).all()
-        # Implement download logic, e.g., generate CSV and return as download
 
         # Delete contributions
         for contribution in contributions:
             db.session.delete(contribution)
+        logging.info("All contributions for fundraiser ID %s deleted.", fundraiser.id)
 
         # Delete fundraiser
         db.session.delete(fundraiser)
         db.session.commit()
+        logging.info("Fundraiser ID %s deleted successfully.", fundraiser.id)
 
         return jsonify(
             success=True, message="Fundraiser and contributions deleted successfully."
         )
+
     except Exception as e:
         db.session.rollback()
-        return jsonify(success=False, message=str(e))
+        logging.error(
+            "Error occurred while deleting fundraiser ID %s: %s", fundraiser.id, str(e)
+        )
+        return jsonify(
+            success=False,
+            message="An error occurred while deleting the fundraiser. Please try again.",
+        )
 
 
 if __name__ == "__main__":
