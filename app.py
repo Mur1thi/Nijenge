@@ -160,13 +160,11 @@ def logout():
 
     # Redirect to the login page or another appropriate route
     flash("You have been logged out", "info")
+    logging.info( "User %s has been logged out", session["username"])
     return redirect(url_for("index"))
 
 
-from flask import flash, make_response, redirect, url_for
-
-
-from flask import flash, make_response, redirect, url_for
+from flask import flash, redirect, url_for
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -174,6 +172,9 @@ def login():
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
+        logging.info(
+            "Login attempt for user: %s", username
+        )
 
         try:
             user = User.query.filter_by(username=username).first()
@@ -186,17 +187,18 @@ def login():
                 ]  # Extract the name before the '@' sign
                 session["name"] = name  # Store the name in the session
                 g.user = user  # Assign user to g for access in other routes
+                logging.info("Successful login for user: %s", username)
                 flash("Login successful", "success")
 
                 # Redirect to index on successful login
                 return redirect(url_for("index"))
             else:
+                logging.warning("Failed login attempt for user: %s", username)
                 flash("Invalid username or password", "error")
                 return redirect(url_for("index", login_error="true"))
         except Exception as e:
             flash("There was an error logging in: " + str(e), "error")
-            # Log error message
-            print("There was an error logging in: " + str(e))
+            logging.error("Error during login: %s", str(e))
             return redirect(url_for("index", login_error="true"))
 
     return render_template("login.html")
@@ -204,6 +206,29 @@ def login():
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
+    """
+    Registers a new user.
+
+    This function handles the registration of a new user. It is accessed via the "/register" route and supports both GET and POST requests.
+
+    Parameters:
+    - None
+
+    Returns:
+    - If the request method is POST:
+        - If the provided email already exists in the database, a flash message is displayed and the user is redirected to the index page with a "#register-error" anchor.
+        - If any of the password or confirmation password fields are empty, a flash message is displayed and the user is redirected to the index page with a "#register-error" anchor.
+        - If the provided passwords do not match, a flash message is displayed and the user is redirected to the index page with a "#register-error" anchor.
+        - If the registration is successful, a flash message is displayed, the user is logged in the system, and the user is redirected to the index page.
+    - If the request method is GET:
+        - The "register.html" template is rendered.
+
+    Note:
+    - The function assumes that the necessary imports and database setup have been performed.
+    - The function uses the Flask framework and the SQLAlchemy ORM to interact with the database.
+    - The function uses the `flash` function to display flash messages to the user.
+    - The function uses the `logging` module to log information about registration attempts.
+    """
     if request.method == "POST":
         username = request.form["username"]
         phone = request.form["phone"]
@@ -213,14 +238,17 @@ def register():
         # Email verification check
         if User.query.filter_by(username=username).first():
             flash("Email already exists. Please use a different email.", "error")
+            logging.warning("Registration attempt with existing email: %s", username)
             return redirect(url_for("index") + "#register-error")
 
         # Password validation
         if not password or not confirm_password:
             flash("Password and confirmation password are required", "error")
+            logging.warning("Password and confirmation password are required")
             return redirect(url_for("index") + "#register-error")
         if password != confirm_password:
             flash("Passwords do not match", "error")
+            logging.warning("Passwords do not match for username: %s", username)
             return redirect(url_for("index") + "#register-error")
 
         # Hash the password before storing
@@ -234,6 +262,7 @@ def register():
         db.session.commit()
 
         flash("Registration successful", "success")
+        logging.info("New user registered successfully: %s", username)
         return redirect(url_for("index"))
 
     return render_template("register.html")
@@ -243,45 +272,50 @@ def register():
 @login_required  # Decorator to check for login status
 def fundraiser():
     """
-    Handles the "/fundraiser" route for both GET and POST requests.
-    
-    This function is a route handler for the "/fundraiser" URL. It is decorated with the `@login_required` decorator,
+    A route handler for the "/fundraiser" URL. This function is decorated with the `@login_required` decorator,
     which means that the user must be logged in to access this route.
     
-    The function first checks if the user has an active fundraiser by calling the `has_active_fundraiser()` function.
-    If the user has an active fundraiser, the function redirects to the "fundraiser_success" page with the fundraiser ID.
+    The function checks if the user has an active fundraiser by calling the `has_active_fundraiser()` function.
+    If the user has an active fundraiser, the function retrieves the fundraiser object using the `Fundraiser.query.filter_by()`
+    method and assigns it to the `user_fundraiser` variable. If the `user_fundraiser` is not `None`, the function logs
+    the fundraiser ID and renders the "fundraiser_success.html" template with the fundraiser ID and fundraiser object as
+    parameters. If the `user_fundraiser` is `None`, the function logs a warning message and returns a string indicating
+    that no active fundraiser was found for the user.
     
-    If the user does not have an active fundraiser, the function calls the `create_fundraiser()` function.
+    If the user does not have an active fundraiser, the function redirects the user to the "create_fundraiser" route.
     
-    Parameters:
-        None
-        
+    If an exception occurs during the execution of the function, the function logs an error message and returns a string
+    indicating that an error occurred while processing the request.
+    
     Returns:
-        - If the user has an active fundraiser:
-            - If the `user_fundraiser` object is not None:
-                - Prints the fundraiser ID.
-                - Renders the "fundraiser_success.html" template with the fundraiser ID and the `user_fundraiser` object.
-            - If the `user_fundraiser` object is None:
-                - Returns the error message "No active fundraiser found for the user".
-        - If the user does not have an active fundraiser:
-            - Calls the `create_fundraiser()` function.
+        - If the user has an active fundraiser, the function returns the rendered "fundraiser_success.html" template with
+          the fundraiser ID and fundraiser object as parameters.
+        - If the user does not have an active fundraiser, the function returns a string indicating that no active fundraiser
+          was found for the user.
+        - If an exception occurs, the function returns a string indicating that an error occurred while processing the request.
     """
-    if has_active_fundraiser():
-        # Redirect to fundraiser_success page if user has an active fundraiser
-        user_fundraiser = Fundraiser.query.filter_by(user_id=g.user.id).first()
-        if user_fundraiser is not None:
-            print("Fundraiser ID:", user_fundraiser.id)  # Print the fundraiser ID
-            return render_template(
-                "fundraiser_success.html",
-                fundraiser_id=user_fundraiser.id,
-                fundraiser=user_fundraiser,
-            )
+    try:
+        if has_active_fundraiser():
+            # Redirect to fundraiser_success page if user has an active fundraiser
+            user_fundraiser = Fundraiser.query.filter_by(user_id=g.user.id).first()
+            if user_fundraiser is not None:
+                logging.info(
+                    "Fundraiser ID: %s", user_fundraiser.id
+                )  # Log the fundraiser ID
+                return render_template(
+                    "fundraiser_success.html",
+                    fundraiser_id=user_fundraiser.id,
+                    fundraiser=user_fundraiser,
+                )
+            else:
+                # Handle the case where user_fundraiser is None
+                logging.warning("No active fundraiser found for the user")
+                return "No active fundraiser found for the user"
         else:
-            # Handle the case where user_fundraiser is None
-            # You can return an error message or redirect to another page
-            return "No active fundraiser found for the user"
-    else:
-        return create_fundraiser()
+            return create_fundraiser()
+    except Exception as e:
+        logging.error("Error in fundraiser route: %s", str(e))
+        return "An error occurred while processing your request."
 
 
 from flask import flash
@@ -289,6 +323,25 @@ from flask import flash
 
 @app.route("/create_fundraiser", methods=["GET", "POST"])
 def create_fundraiser():
+    """
+    A route handler for the "/create_fundraiser" URL. This function handles both GET and POST requests.
+    
+    If the request method is POST, the function retrieves the form data for the fundraiser fields (name, description, end_date, target_funds) and converts the end_date to a datetime object.
+    
+    The function then checks if the user already has an active fundraiser by querying the database. If the user has an active fundraiser, the function displays an error message and redirects the user back to the create_fundraiser page.
+    
+    If the user does not have an active fundraiser, the function creates a new fundraiser object with the form data and adds it to the database. It then commits the changes and displays a success message.
+    
+    If an exception occurs during the process, the function logs an error message and displays an error message to the user.
+    
+    If the request method is GET, the function retrieves the fundraiser object for the current user from the database. If an exception occurs during the retrieval process, the function logs an error message and displays an error message to the user.
+    
+    Returns:
+        - If the request method is POST and the fundraiser is created successfully, the function redirects the user to the fundraiser_success page.
+        - If the request method is POST and an exception occurs, the function redirects the user back to the create_fundraiser page.
+        - If the request method is GET and the fundraiser is retrieved successfully, the function renders the "fundraiser.html" template with the fundraiser object as a parameter.
+        - If the request method is GET and an exception occurs, the function redirects the user to the index page.
+    """
     if request.method == "POST":
         name = request.form["name"]
         description = request.form["description"]
@@ -304,6 +357,7 @@ def create_fundraiser():
                     "You already have an active fundraiser. Please complete or cancel it before creating a new one.",
                     "error",
                 )
+                logging.warning("User %s already has an active fundraiser.", g.user.id)
                 return redirect(url_for("create_fundraiser"))
 
             # Create the new fundraiser
@@ -318,12 +372,13 @@ def create_fundraiser():
             db.session.commit()
 
             flash("Fundraiser created successfully!", "success")
+            logging.info("New fundraiser created successfully: %s", new_fundraiser.id)
             return redirect(
                 url_for("fundraiser_success", fundraiser_id=new_fundraiser.id)
             )  # Redirect to success page
 
         except Exception as e:
-            logging.error(str(e))  # Works like console.log
+            logging.error("Error while creating fundraiser: %s", str(e))
             flash(
                 "An error occurred while creating the fundraiser. Please try again.",
                 "error",
@@ -332,13 +387,21 @@ def create_fundraiser():
 
     # Render the form for GET requests
     # Retrieve the fundraiser object
-    fundraiser = Fundraiser.query.filter_by(user_id=g.user.id).first()
-    return render_template("fundraiser.html", fundraiser=fundraiser)
+    try:
+        fundraiser = Fundraiser.query.filter_by(user_id=g.user.id).first()
+        logging.info("Rendering fundraiser form for user %s", g.user.id)
+        return render_template("fundraiser.html", fundraiser=fundraiser)
+    except Exception as e:
+        logging.error("Error retrieving fundraiser for user %s: %s", g.user.id, str(e))
+        flash(
+            "An error occurred while retrieving fundraiser data. Please try again.",
+            "error",
+        )
+        return redirect(url_for("index"))
 
 
 from datetime import datetime
 from flask import jsonify
-import math
 import re  # Import regular expressions for robust parsing
 
 
@@ -346,178 +409,219 @@ import re  # Import regular expressions for robust parsing
 @login_required
 def save_contribution(fundraiser_id):
     """
-    Save a contribution made to a fundraiser.
+    Save a contribution for a fundraiser.
 
-    This route handles both GET and POST requests to save a contribution made to a fundraiser.
-    It requires the user to be logged in.
+    This route handles both GET and POST requests to save a contribution for a fundraiser.
 
     Parameters:
-        fundraiser_id (int): The ID of the fundraiser to which the contribution is made.
+        fundraiser_id (int): The ID of the fundraiser.
 
     Returns:
-        - If the request method is POST:
-            - If the contribution reference, amount, contributor name, phone number, contribution date,
-              and contribution time are valid and can be extracted from the message, a JSON response
-              with the status "success" and the saved contribution data is returned.
-            - If any of the required information is missing or invalid, a JSON response with the status
-              "error" and an error message is returned.
-        - If the request method is GET:
-            - The "fundraiser_success.html" template is rendered with the fundraiser object.
-
-    Raises:
-        - If there is an error saving the contribution to the database, a JSON response with the status
-          "error" and the error message is returned.
+        If the request method is POST:
+            If the contribution is successfully saved, returns a JSON response with the following fields:
+                - status (str): The status of the response.
+                - message (str): A success message.
+                - data (dict): A dictionary containing the following fields:
+                    - funds_raised (float): The total amount raised by the fundraiser.
+                    - fundraiser_id (int): The ID of the fundraiser.
+                    - contribution_reference (str): The reference number for the contribution.
+                    - amount (float): The amount contributed.
+                    - contributor_name (str): The name of the contributor.
+                    - phone_number (str): The phone number of the contributor.
+                    - contribution_date (str): The date of the contribution in the format 'YYYY-MM-DD'.
+                    - contribution_time (str): The time of the contribution in the format 'HH:MM:SS'.
+            If there is an error saving the contribution, returns a JSON response with the following fields:
+                - status (str): The status of the response.
+                - message (str): An error message.
+        If the request method is GET:
+            Renders the 'fundraiser_success.html' template with the fundraiser object.
+            If there is an error rendering the template, returns a JSON response with the following fields:
+                - status (str): The status of the response.
+                - message (str): An error message.
     """
-    fundraiser = Fundraiser.query.get_or_404(fundraiser_id)
+    try:
+        fundraiser = Fundraiser.query.get_or_404(fundraiser_id)
+    except Exception as e:
+        logging.error(
+            "Error retrieving fundraiser with ID %s: %s", fundraiser_id, str(e)
+        )
+        return jsonify({"status": "error", "message": "Fundraiser not found"})
+
     if request.method == "POST":
-        message = request.form["message"]
-        contribution_reference = re.search(r"\b[A-Z0-9]{10}\b", message)
-        if not contribution_reference:
-            return error("Invalid contribution reference", 400)
-        contribution_reference = contribution_reference.group()
-
-        amount = re.search(r"Ksh([\d,]+)\.", message)
-        if not amount:
-            return error("Invalid amount", 400)
-        amount = amount.group(1).replace(",", "")
-
-        contributor_name = re.search(r"from ([A-Z\s]+) \d", message)
-        if not contributor_name:
-            return error("Invalid contributor name", 400)
-        contributor_name = contributor_name.group(1)
-
-        phone_number = re.search(r"(\d+) on", message)
-        if not phone_number:
-            return error("Invalid phone number", 400)
-        phone_number = phone_number.group(1)
-
-        contribution_date = re.search(r"on (\d{1,2}/\d{1,2}/\d{2}) at", message)
-        if not contribution_date:
-            return error("Invalid contribution date", 400)
-        contribution_date = datetime.strptime(
-            contribution_date.group(1), "%d/%m/%y"
-        ).date()
-
-        contribution_time = re.search(r"at (\d{1,2}:\d{2} (?:AM|PM))", message)
-        if not contribution_time:
-            return error("Invalid contribution time", 400)
-        contribution_time = datetime.strptime(
-            contribution_time.group(1), "%I:%M %p"
-        ).time()
-
-        contribution = Contribution(
-            fundraiser_id=fundraiser_id,
-            contribution_reference=contribution_reference,
-            contributor_name=contributor_name,
-            phone_number=phone_number,
-            amount=amount,
-            contribution_date=contribution_date,
-            contribution_time=contribution_time,
-        )
-        db.session.add(contribution)
         try:
-            db.session.commit()
-        except Exception as e:
-            return jsonify({"status": "error", "message": str(e)})
+            message = request.form["message"]
+            contribution_reference = re.search(r"\b[A-Z0-9]{10}\b", message)
+            if not contribution_reference:
+                logging.warning(
+                    "Invalid contribution reference in message: %s", message
+                )
+                return error("Invalid contribution reference", 400)
+            contribution_reference = contribution_reference.group()
 
-        return jsonify(
-            {
-                "status": "success",
-                "message": "Contribution saved successfully!",
-                "data": {
-                    "funds_raised": fundraiser.funds_raised,
-                    "fundraiser_id": fundraiser_id,
-                    "contribution_reference": contribution_reference,
-                    "amount": amount,
-                    "contributor_name": contributor_name,
-                    "phone_number": phone_number,
-                    "contribution_date": contribution_date.strftime("%Y-%m-%d"),
-                    "contribution_time": contribution_time.strftime(
-                        "%H:%M:%S"
-                    ),  # Convert time to string
-                },
-            }
-        )
+            amount = re.search(r"Ksh([\d,]+)\.", message)
+            if not amount:
+                logging.warning("Invalid amount in message: %s", message)
+                return error("Invalid amount", 400)
+            amount = amount.group(1).replace(",", "")
+
+            contributor_name = re.search(r"from ([A-Z\s]+) \d", message)
+            if not contributor_name:
+                logging.warning("Invalid contributor name in message: %s", message)
+                return error("Invalid contributor name", 400)
+            contributor_name = contributor_name.group(1)
+
+            phone_number = re.search(r"(\d+) on", message)
+            if not phone_number:
+                logging.warning("Invalid phone number in message: %s", message)
+                return error("Invalid phone number", 400)
+            phone_number = phone_number.group(1)
+
+            contribution_date = re.search(r"on (\d{1,2}/\d{1,2}/\d{2}) at", message)
+            if not contribution_date:
+                logging.warning("Invalid contribution date in message: %s", message)
+                return error("Invalid contribution date", 400)
+            contribution_date = datetime.strptime(
+                contribution_date.group(1), "%d/%m/%y"
+            ).date()
+
+            contribution_time = re.search(r"at (\d{1,2}:\d{2} (?:AM|PM))", message)
+            if not contribution_time:
+                logging.warning("Invalid contribution time in message: %s", message)
+                return error("Invalid contribution time", 400)
+            contribution_time = datetime.strptime(
+                contribution_time.group(1), "%I:%M %p"
+            ).time()
+
+            contribution = Contribution(
+                fundraiser_id=fundraiser_id,
+                contribution_reference=contribution_reference,
+                contributor_name=contributor_name,
+                phone_number=phone_number,
+                amount=amount,
+                contribution_date=contribution_date,
+                contribution_time=contribution_time,
+            )
+            db.session.add(contribution)
+            try:
+                db.session.commit()
+            except Exception as e:
+                logging.error(
+                    "Error committing contribution to the database: %s", str(e)
+                )
+                return jsonify({"status": "error", "message": str(e)})
+
+            logging.info(
+                "Contribution saved successfully for fundraiser ID %s with message: %s", fundraiser_id, message
+            )
+            return jsonify(
+                {
+                    "status": "success",
+                    "message": "Contribution saved successfully!",
+                    "data": {
+                        "funds_raised": fundraiser.funds_raised,
+                        "fundraiser_id": fundraiser_id,
+                        "contribution_reference": contribution_reference,
+                        "amount": amount,
+                        "contributor_name": contributor_name,
+                        "phone_number": phone_number,
+                        "contribution_date": contribution_date.strftime("%Y-%m-%d"),
+                        "contribution_time": contribution_time.strftime(
+                            "%H:%M:%S"
+                        ),  # Convert time to string
+                    },
+                }
+            )
+
+        except Exception as e:
+            logging.error("Error processing contribution: %s", str(e))
+            return jsonify(
+                {
+                    "status": "error",
+                    "message": "An error occurred while saving the contribution.",
+                }
+            )
 
     else:
-        return render_template("fundraiser_success.html", fundraiser=fundraiser)
+        try:
+            return render_template("fundraiser_success.html", fundraiser=fundraiser)
+        except Exception as e:
+            logging.error(
+                "Error rendering fundraiser success template for fundraiser ID %s: %s",
+                fundraiser_id,
+                str(e),
+            )
+            return jsonify(
+                {
+                    "status": "error",
+                    "message": "An error occurred while loading the page.",
+                }
+            )
 
 
 # Route to handle AJAX requests for fetching contributions
 @app.route("/report_index")
 @login_required
 def report_index():
-    """
-    Retrieves the active fundraiser for the logged-in user and redirects to the report page.
-    
-    This function is a route handler for the "/report_index" URL. It is decorated with the `@login_required` decorator,
-    which means that the user must be logged in to access this route.
-    
-    The function first calls the `has_active_fundraiser()` function to retrieve the ID of the active fundraiser for
-    the logged-in user. If no active fundraiser is found, the function redirects the user to the "/fundraiser" URL.
-    
-    If an active fundraiser is found, the function fetches the fundraiser object using the `Fundraiser.query.get_or_404()`
-    method and assigns it to the `fundraiser` variable.
-    
-    The function then retrieves the value of the "page" query parameter from the request. If the parameter is not present,
-    the default value of 1 is used.
-    
-    Finally, the function redirects the user to the "/report" URL with the `fundraiser_id` and `page_number` as query parameters.
-    
-    Returns:
-        A redirect response to the "/report" URL with the `fundraiser_id` and `page_number` as query parameters.
-    """
-    fundraiser_id = has_active_fundraiser()
-    if fundraiser_id is None:
-        flash("Please create a fundraiser first", "warning")
+    try:
+        fundraiser_id = has_active_fundraiser()
+        if fundraiser_id is None:
+            logging.warning("No active fundraiser found for the user.")
+            flash("Please create a fundraiser first", "warning")
+            return redirect(url_for("fundraiser"))
+
+        fundraiser = Fundraiser.query.get_or_404(fundraiser_id)  # Fetch the fundraiser
+        logging.info("Active fundraiser found for user: %s", fundraiser_id)
+
+        page_number = request.args.get("page", 1)
+        return redirect(
+            url_for("report", fundraiser_id=fundraiser.id, page_number=page_number)
+        )
+    except Exception as e:
+        logging.error("Error in report_index function: %s", str(e))
+        flash("An error occurred. Please try again later.", "error")
         return redirect(url_for("fundraiser"))
 
-    fundraiser = Fundraiser.query.get_or_404(fundraiser_id)  # Fetch the fundraiser
 
-    page_number = request.args.get("page", 1)
-    return redirect(
-        url_for("report", fundraiser_id=fundraiser.id, page_number=page_number) 
-    )
-
-"""
-Retrieves all contributions for a specific fundraiser and renders a report template with the contributions.
-
-Parameters:
-    fundraiser_id (int): The ID of the fundraiser.
-
-Returns:
-    If the 'format' query parameter is 'json', returns a JSON response with a list of contributions.
-    Otherwise, renders the 'report.html' template with the fundraiser and contributions data.
-"""
 # Report route to fetch contributions for a specific fundraiser
 @app.route("/report/<int:fundraiser_id>")
 @login_required
 def report(fundraiser_id):
-    # Fetch all contributions for the fundraiser
-    fundraiser = Fundraiser.query.get_or_404(fundraiser_id)
-    contributions = Contribution.query.filter_by(fundraiser_id=fundraiser_id).all()
+    try:
+        # Fetch all contributions for the fundraiser
+        fundraiser = Fundraiser.query.get_or_404(fundraiser_id)
+        contributions = Contribution.query.filter_by(fundraiser_id=fundraiser_id).all()
+        logging.info("Fetched contributions for fundraiser ID: %s", fundraiser_id)
 
-    # Convert contributions to a list of dictionaries
-    contributions_dict = [
-        {
-            "reference": contribution.contribution_reference,
-            "name": contribution.contributor_name,
-            "amount": currency_format(contribution.amount),
-            "date": contribution.contribution_date.strftime("%d-%m-%Y"),
-            "time": contribution.contribution_time.strftime("%H:%M:%S"),
-            "timestamp": contribution.timestamp.strftime("%d-%m-%Y %H:%M:%S"),
-        }
-        for contribution in contributions
-    ]
+        # Convert contributions to a list of dictionaries
+        contributions_dict = [
+            {
+                "reference": contribution.contribution_reference,
+                "name": contribution.contributor_name,
+                "amount": currency_format(contribution.amount),
+                "date": contribution.contribution_date.strftime("%d-%m-%Y"),
+                "time": contribution.contribution_time.strftime("%H:%M:%S"),
+                "timestamp": contribution.timestamp.strftime("%d-%m-%Y %H:%M:%S"),
+            }
+            for contribution in contributions
+        ]
 
-    if request.args.get("format") == "json":
-        # Return JSON response if 'format' query parameter is 'json'
-        return jsonify(items=contributions_dict)
-    else:
-        # Render the template with initial contributions
-        return render_template(
-            "report.html", fundraiser=fundraiser, contributions=contributions_dict
+        if request.args.get("format") == "json":
+            # Return JSON response if 'format' query parameter is 'json'
+            return jsonify(items=contributions_dict)
+        else:
+            # Render the template with initial contributions
+            return render_template(
+                "report.html", fundraiser=fundraiser, contributions=contributions_dict
+            )
+    except Exception as e:
+        logging.error(
+            "Error in report function for fundraiser ID %s: %s", fundraiser_id, str(e)
         )
+        flash(
+            "An error occurred while fetching the report. Please try again later.",
+            "error",
+        )
+        return redirect(url_for("fundraiser"))
 
 
 @app.route("/delete_fundraiser", methods=["POST"])
