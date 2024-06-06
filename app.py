@@ -385,9 +385,8 @@ def create_fundraiser():
 
             flash("Fundraiser created successfully!", "success")
             logging.info("New fundraiser created successfully: %s", new_fundraiser.id)
-            return redirect(
-                url_for("fundraiser_success", fundraiser_id=new_fundraiser.id)
-            )  # Redirect to success page
+            # Redirect to the /fundraiser route to reload the page and display the new fundraiser
+            return redirect(url_for("fundraiser"))
 
         except Exception as e:
             logging.error("Error while creating fundraiser: %s", str(e))
@@ -594,6 +593,11 @@ def report_index():
         - If an exception occurs, the function redirects the user to the "fundraiser" route.
     """
     try:
+        # Check if user is logged in
+        if "user_id" not in session:
+            flash("Please log in first", "warning")
+            return redirect(url_for("login"))
+        # Check if user has an active fundraiser
         fundraiser_id = has_active_fundraiser()
         if fundraiser_id is None:
             logging.warning("No active fundraiser found for the user.")
@@ -680,7 +684,6 @@ Returns:
             "error",
         )
         return redirect(url_for("fundraiser"))
-
 
 
 @app.route("/delete_fundraiser", methods=["POST"])
