@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: [master]
+
+jobs:
+  lint:
+    name: Lint Python
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          pip install flake8
+          pip install -r requirements.txt
+
+      - name: Run flake8
+        run: |
+          # Fail on syntax errors, undefined names, and unused imports
+          flake8 . --count --select=E9,F63,F7,F82,F4,F841 --show-source --statistics
+          # Report style issues without failing the build (config from .flake8)
+          flake8 . --count --statistics --exit-zero
