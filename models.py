@@ -1,11 +1,9 @@
-import logging
-from flask import render_template, session, redirect, url_for, g, request
+from functools import wraps
+from flask import render_template, session, redirect, url_for, g
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import func
 
 db = SQLAlchemy()
-
-from functools import wraps
 
 """
 Decorator that checks if a user is logged in before executing the decorated function.
@@ -125,9 +123,6 @@ def has_active_fundraiser():
         if user_fundraiser:
             return user_fundraiser.id
     return None
-
-
-from datetime import datetime
 
 
 class Contribution(db.Model):

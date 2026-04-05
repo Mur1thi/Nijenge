@@ -113,7 +113,7 @@ def contact():
     except Exception as e:
         logging.error(f"An error occurred while sending the email: {str(e)}")
         # Return error response with Toastr notification
-        return jsonify({"status": "error", "message": f"An error occurred while sending the email"})
+        return jsonify({"status": "error", "message": "An error occurred while sending the email"})
 
 
 # Create a secure SMTP connection for sending emails
@@ -135,6 +135,7 @@ def send_mail(subject, recipient, body):
     with smtplib.SMTP_SSL("smtp.mail.yahoo.com", 465) as smtp:
         smtp.login(mail_username, password)
         smtp.send_message(msg)
+
 
 @app.route("/messages")
 def get_messages():
@@ -226,7 +227,6 @@ def register():
     """
     if request.method == "POST":
         username = request.form["username"]
-        phone = request.form["phone"]
         password = request.form["password"]
         confirm_password = request.form["confirm_password"]
 

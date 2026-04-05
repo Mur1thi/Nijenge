@@ -1,0 +1,9 @@
+[flake8]
+max-line-length = 120
+exclude =
+    migrations/,
+    .git,
+    __pycache__,
+    node_modules/
+# E501 long lines in docstrings — acknowledged but non-blocking
+extend-ignore = E501
