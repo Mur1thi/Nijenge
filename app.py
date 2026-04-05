@@ -1,15 +1,18 @@
 import json
 import logging
 import os
+import re
 import secrets
+from datetime import datetime
 from pathlib import Path
 import smtplib
-import logging
 from dotenv import load_dotenv
 from email.message import EmailMessage
 from flask import (
     Flask,
+    flash,
     g,
+    get_flashed_messages,
     request,
     session,
     redirect,
@@ -19,7 +22,6 @@ from flask import (
 )
 from flask_bootstrap import Bootstrap
 from flask_migrate import Migrate
-from werkzeug.debug import console
 from werkzeug.security import generate_password_hash, check_password_hash
 from models import (
     User,
@@ -54,7 +56,7 @@ venv_cfg_path = None
 if venv_path is not None:
     venv_cfg_path = Path(venv_path) / "pyvenv.cfg"
 
-app.config["SECRET_KEY"] = secrets.token_urlsafe(16)
+app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", secrets.token_urlsafe(16))
 
 # Initialize Flask-Migrate
 migrate = Migrate(app, db)
@@ -79,7 +81,6 @@ def index():
 @app.route("/contact", methods=["POST"])
 def contact():
     logging.info("Received contact form submission")
-    print("From app.py", request.form)  # Print the entire form data
 
     name = request.form.get("name")
     email = request.form.get("email")
@@ -135,9 +136,6 @@ def send_mail(subject, recipient, body):
         smtp.login(mail_username, password)
         smtp.send_message(msg)
 
-from flask import request, get_flashed_messages, flash, make_response, redirect, url_for
-
-
 @app.route("/messages")
 def get_messages():
     messages = get_flashed_messages(with_categories=True)
@@ -160,11 +158,8 @@ def logout():
 
     # Redirect to the login page or another appropriate route
     flash("You have been logged out", "info")
-    logging.info( "User %s has been logged out", session["username"])
+    logging.info("User %s has been logged out", session.get("username"))
     return redirect(url_for("index"))
-
-
-from flask import flash, redirect, url_for
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -267,9 +262,6 @@ def register():
 
     return render_template("register.html")
 
-from flask import g, session
-from models import User
-
 
 @app.before_request
 def load_user():
@@ -328,9 +320,6 @@ def fundraiser():
     except Exception as e:
         logging.error("Error in fundraiser route: %s", str(e))
         return "An error occurred while processing your request."
-
-
-from flask import flash
 
 
 @app.route("/create_fundraiser", methods=["GET", "POST"])
@@ -409,11 +398,6 @@ def create_fundraiser():
             "error",
         )
         return redirect(url_for("index"))
-
-
-from datetime import datetime
-from flask import jsonify
-import re  # Import regular expressions for robust parsing
 
 
 @app.route("/fundraiser_success/<int:fundraiser_id>", methods=["GET", "POST"])
